@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
+    <system>
+        <!-- Add new Tab -->
+        <tab id="dckap" translate="label" sortOrder="400">
+            <label>DCKAP</label>
+        </tab>
+        <section id="quickorder_section" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Quick Order</label>
+            <tab>dckap</tab>
+            <!-- resource tag name which we have to defined in the acl.xml -->
+            <resource>Dckap_Quickorder::config_quickorder</resource>            
+            <group id="quickorder_group_general" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Options</label>
+                <field id="status" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="default_rows" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default No. of rows to display</label>
+                    <comment>No. of rows to display in the quick order popup by default.</comment>
+                </field>
+                <field id="sku_quantityseparator" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SKU-Quantity Separator</label>
+                    <comment>Separator used in between SKU and Quantity in text area.Default separator is |#|</comment>
+                </field> 
+                <field id="qo_charslenthac" translate="label comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Autocomplete minimum character length</label>
+                    <comment>Minimum number of characters needed for autocomplete to work. Default : 3</comment>
+                </field>
+                <field id="widget_mode" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Widget Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When you use quick order widget in any page, you have to switch this setting on.</comment>
+                </field>           
+            </group>                        
+        </section>        
+    </system>
+</config>

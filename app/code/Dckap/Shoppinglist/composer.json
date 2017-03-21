@@ -1,0 +1,6 @@
+{
+"name": "Dckap/Shoppinglist",
+"autoload": {
+    "psr-4": { "Dckap\\Shoppinglist\\": "" },
+    "files": [ "registration.php" ]
+} }

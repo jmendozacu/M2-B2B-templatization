@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Dckap_Quickorder::quickorder_item" title="Quick Order" module="Dckap_Quickorder" sortOrder="100" parent="Magento_Backend::stores" resource="Dckap_Quickorder::quickorder_item" />
+        
+        <add id="Dckap_Quickorder::quickorder_settings" title="Settings" module="Dckap_Quickorder" sortOrder="1" parent="Dckap_Quickorder::quickorder_item" action="adminhtml/system_config/edit/section/quickorder_section" resource="Dckap_Quickorder::quickorder_settings"/>        
+    </menu>
+</config>
