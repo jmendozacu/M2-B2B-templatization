@@ -17,6 +17,7 @@ atlassian*
 /lib/internal/flex/uploader/.flexProperties
 /lib/internal/flex/uploader/.project
 /lib/internal/flex/uploader/.settings
+
 /lib/internal/flex/varien/.actionScriptProperties
 /lib/internal/flex/varien/.flexLibProperties
 /lib/internal/flex/varien/.project
@@ -50,3 +51,4 @@ atlassian*
 /vendor/*
 !/vendor/.htaccess
 /setup.png
+/app/code/Dckap/TaxExemptionCertificate/controller/Tax/Taxcert.php
