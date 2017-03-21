@@ -52,3 +52,4 @@ atlassian*
 !/vendor/.htaccess
 /setup.png
 /app/code/Dckap/TaxExemptionCertificate/Controller/Tax/Taxcert.php
+vendor/*
