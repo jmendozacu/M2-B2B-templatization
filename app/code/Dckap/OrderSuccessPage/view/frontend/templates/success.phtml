@@ -1,0 +1,184 @@
+<?php
+/**
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*/
+
+// @codingStandardsIgnoreFile
+
+?>
+<div class="checkout-success">
+  <div class="page-title-wrapper">
+    <h1 class="page-title">
+    <span class="base" data-ui-id="page-title-wrapper">Thank you</span> </h1>
+  </div>
+
+  <?php if ($block->getOrderId()):?>
+    <h1 class="page-title">
+      <span class="base">Thank you </span>    
+    </h1>
+    <p id="success_msg">An email confirmation was automatically sent to the address provided during checkout and subsequent alerts with tracking numbers will be sent as your item(s) are shipped</p>
+    
+    <?php 
+      $_order = $block->getds(); 
+      $shipping_addresses = $_order->getShippingAddress()->getData();
+      $address = $_order->getShippingAddress()->getStreet(); 
+      $address1 =''; 
+      if(array_key_exists(1,$address))
+      {
+        $address1=', '.$address[1];
+      }
+      $shipping_addresses['street'] = $_order->getShippingAddress() ? $address[0].$address1 : '&nbsp;' ;
+      $billing_addresses = $_order->getBillingAddress()->getData();
+      $addressBilling = $_order->getBillingAddress()->getStreet();
+      $address1Billing =''; 
+      if(array_key_exists(1,$addressBilling))
+      {
+        $address1Billing=', '.$addressBilling[1];
+      }
+      $billing_addresses['street'] = $_order->getBillingAddress() ? $addressBilling[0].$address1Billing : '&nbsp;';
+    ?>
+    <div class="success-detail">
+      <div class="checkout-succ-order">
+        <span class="order-id">Order #<?php echo $block->getOrderId(); ?></span>
+        <span class="order-pring"><a href="" 
+        onclick="window.print();"><i class="temp-sprite succ-print"></i>Print</a></span>
+      </div>
+      <div class="box box-order-shipping-address">
+        <strong class="box-title"><span>Shipping Address</span></strong>
+        <div class="box-content">
+          <?php
+            $countryFactory = $block->getCountryFactory();
+            if(!empty($shipping_addresses))
+            {
+              ?>
+              <p><?php echo  $shipping_addresses['firstname'].' '.$shipping_addresses['lastname']; ?></p>
+              
+              <?php if($shipping_addresses['company']):?>
+                <p><?php echo  $shipping_addresses['company']; ?></p>
+              <?php endif; ?>
+              
+              <p><?php echo  $shipping_addresses['street']; ?></p>
+              
+              <p><?php echo  $shipping_addresses['city']; ?>, <?php echo  $shipping_addresses['region']; ?>, <?php echo  $shipping_addresses['postcode']; ?></p>
+              
+              <p><?php echo $countryFactory->create()->setId($shipping_addresses['country_id'])->getName(); ?></p>
+              
+              <p><?php echo  'T: '.$shipping_addresses['telephone']; ?></p>
+            <?php
+            }
+          ?>
+        </div>
+      </div>
+      <div class="box box-order-billing-address">
+        <strong class="box-title"><span>Billing Address</span></strong>
+        <div class="box-content">
+          <?php
+          if(!empty($billing_addresses))
+          {
+            ?>
+            <p><?php echo  $billing_addresses['firstname'].' '.$billing_addresses['lastname']; ?></p>
+            
+            <?php if($billing_addresses['company']):?>
+              <p><?php echo  $billing_addresses['company']; ?></p>
+            <?php endif; ?>
+            
+            <p><?php echo  $billing_addresses['street']; ?></p>
+            
+            <p><?php echo  $billing_addresses['city']; ?>, <?php echo  $billing_addresses['region']; ?>, <?php echo  $billing_addresses['postcode']; ?></p>
+            
+            <p><?php echo $countryFactory->create()->setId($billing_addresses['country_id'])->getName(); ?></p>
+            
+            <p><?php echo  'T: '.$billing_addresses['telephone']; ?></p>
+            <?php
+            }
+          ?>
+        </div>
+      </div>
+
+      <div class="box box-order-shipping-address">
+        <strong><?php /* @escapeNotVerified */ echo __('Shipping Method') ?></strong>
+        
+        <?php if ($_order->getShippingDescription()): ?>
+          <p><?php echo $block->escapeHtml($_order->getShippingDescription()) ?></p>
+        <?php else: ?>
+          <p> <?php /* @escapeNotVerified */ echo __('No shipping information available'); ?></p>
+        <?php endif; ?>
+      </div>
+      <div class="box box-order-billing-method">
+        <strong class="box-title">
+          <span>Payment Method</span>
+        </strong>
+        <div class="box-content">
+        <?php endif;?>
+          <div class="box-content">
+            <?php print_r( $_order->getPayment()->getMethodInstance()->getTitle()); ?>
+          </div>
+
+          <div class="order_information">
+            <?php $order_items = $_order->getAllItems();
+          ?>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="success-table">
+      <h3>Order Information</h3>
+      <table>
+        <tbody>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th style="text-align: center;">QTY</th>
+            <th style="text-align: right;padding-right: 10px;">Subtotal</th>
+
+          </tr>
+
+        <?php
+        foreach ($order_items as $item) {
+          // set image width and height
+          $imagewidth = 100;
+          $imageheight = 100;
+
+          $_product = $block->getProductRepository($item->getProductId());
+          $imageHelper  = $block->getProductImageHelper();
+          $image_url = $imageHelper->init($_product, 'product_page_image_large')->setImageFile($_product->getFile())->resize($imagewidth, $imageheight)->getUrl();
+
+          ?>
+          <tr>
+            <td><img style="float: left; padding-right: 20px;" src="<?php echo $image_url; ?>" width="100px" /><a href="<?php echo $_product->getProductUrl(); ?>"><span style="vertical-align: top;float: left;margin-top: 5%;"><?php echo $item->getName(); ?></span></a></td>
+            <td><?php echo $_order->formatPrice($item->getPrice()); ?></td>
+            <td style="text-align: center;"><?php echo (int) $item->getQtyOrdered(); ?></td>
+            <td style="text-align: right;"><?php echo $_order->formatPrice($item->getRowTotal()); ?></td>
+          </tr>
+          <?php
+        }
+        ?>
+
+        </tbody>
+
+      </table>  
+
+      <div class="success-subtotal">
+        <ul>
+
+          <li><span><?php /* @escapeNotVerified */ echo __('Subtotal'); ?></span> <?php  echo $_order->formatPrice($_order->getSubTotal()); ?> </li>
+
+          <li><span><?php   /* @escapeNotVerified */ echo __('Shipping & Handling'); ?></span> <?php  echo $_order->formatPrice($_order->getShippingAmount()); ?></li>
+
+          <li><span><?php   /* @escapeNotVerified */ echo __('Tax'); ?></span> <?php  echo $_order->formatPrice($_order->getTaxAmount()); ?></li>
+
+          <?php if((int)$_order->getDiscountAmount()): ?>
+          <li><span><?php /* @escapeNotVerified */ echo __('Discount'); ?></span> <?php  echo $_order->formatPrice($_order->getDiscountAmount()); ?> </li>
+          <?php endif; ?>
+
+          <li><span><?php /* @escapeNotVerified */ echo __(' Grand Total'); ?></span> <?php echo $_order->formatPrice($_order->getGrandTotal()); ?></li>
+
+        </ul>
+
+      </div>
+  </div>
+  
+</div>

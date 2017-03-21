@@ -1,0 +1,12 @@
+
+
+<!--@subject Customer Tax certificate information@-->
+
+{{template config_path="design/email/header_template"}}
+
+Hi, {{trans "%name" name=$data.name}}
+{{trans "%email" email=$data.email}}
+
+Please find Tax certificate attached for the customer {{trans "%clientname" clientname=$data.clientemail}}.
+
+{{template config_path="design/email/footer_template"}}
