@@ -97,15 +97,15 @@
 
 if (!file_exists($mediaDirectory->getAbsolutePath("customer"))) {
     mkdir($mediaDirectory->getAbsolutePath("customer"), 0777, true);
-    exec("chown -R haritha:www-data ".BP . $mediaDirectory->getAbsolutePath("customer"));
+    exec("chown -R dckap:www-data ".BP . $mediaDirectory->getAbsolutePath("customer"));
 }  
 if (!file_exists($mediaDirectory->getAbsolutePath("customer/taxcertificates"))) {
     mkdir($mediaDirectory->getAbsolutePath("customer/taxcertificates"), 0777, true);
-    exec("chown -R haritha:www-data ".BP . $mediaDirectory->getAbsolutePath("customer/taxcertificates"));
+    exec("chown -R dckap:www-data ".BP . $mediaDirectory->getAbsolutePath("customer/taxcertificates"));
 }
 if (!file_exists($mediaDirectory->getAbsolutePath("customer/taxcertificates/".$id))) {
     mkdir($mediaDirectory->getAbsolutePath("customer/taxcertificates/".$id), 0777, true);
-    exec("chown -R haritha:www-data ".BP . $mediaDirectory->getAbsolutePath("customer/taxcertificates/".$id));
+    exec("chown -R dckap:www-data ".BP . $mediaDirectory->getAbsolutePath("customer/taxcertificates/".$id));
 }        
         try {
                if (isset($_FILES['fileToUpload']) && isset($_FILES['fileToUpload']['name']) && strlen($_FILES['fileToUpload']['name'])) 
