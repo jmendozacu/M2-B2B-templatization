@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Widget/etc/widget.xsd">
+	<widget id="Dckap_Topsellingitemscategory" class="Dckap\Topsellingitemscategory\Block\Widget\Topsellingitemscategory">
+		<label translate="true">Top Selling items on Category</label>
+		<description>To display top selling items based on category</description>
+		
+	</widget>
+</widgets>
