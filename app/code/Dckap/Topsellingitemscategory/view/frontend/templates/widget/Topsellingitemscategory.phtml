@@ -3,6 +3,7 @@
 
 // $block->getBestsellerProduct(); exit; 
 //echo count($block->getBestsellerProduct());
+//print_r(get_class_methods($block)); exit;
 if( count($block->getTopBestsellerProduct()) != 0)
 {
     if ($exist = ($block->getTopBestsellerProduct() )) {
@@ -37,7 +38,6 @@ $imageheight = 100 ;
     <?php foreach ($fet_prodcollection as $item_id=>$item_id_qty):     
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $_product = $block->getProductDetails($item_id);
-
 $product_url = $this->getProductUrls($item_id);
 $rating_code =  $this->getDirectQuery($item_id); 
 
@@ -165,8 +165,7 @@ $imagewidth = 100;
 $imageheight = 100 ;
 
   $title = $block->getTitle() ? __($block->getTitle()) : 'Top Selling '; 
-
- $items = $block->getProductCollection()->getItems();
+$items = $block->getProductCollection()->getItems();
  $showWishlist = true;
     $showCompare = true;
     $showCart = true;
@@ -197,7 +196,6 @@ $imageheight = 100 ;
                 <ol class="product-items widget-viewed-grid">
                     <?php $iterator = 1; ?>
     <?php foreach ($items as $item):     
-
 
  
     ?>

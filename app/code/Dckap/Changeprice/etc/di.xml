@@ -3,5 +3,8 @@
     <type name="Magento\Catalog\Model\Product">
         <plugin name="Dckap_Changeprice" type="Dckap\Changeprice\Plugin\Changeprice" />
     </type>
+    <type name="\Dckap\Topsellingitemscategory\Block\Widget\Topsellingitemscategory">
+        <plugin name="Dckap_Topsellingprice" type="Dckap\Changeprice\Plugin\Topsellingprice" />
+    </type>
 </config>
 
