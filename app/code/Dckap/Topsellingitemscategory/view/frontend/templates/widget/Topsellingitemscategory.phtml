@@ -1,285 +1,252 @@
-
 <?php
-
-// $block->getBestsellerProduct(); exit; 
-//echo count($block->getBestsellerProduct());
-//print_r(get_class_methods($block)); exit;
 if( count($block->getTopBestsellerProduct()) != 0)
 {
     if ($exist = ($block->getTopBestsellerProduct() )) {
-$fet_prodcollection = $block->getTopBestsellerProduct();
- $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
-$productcount = $this->getProductLimit();
-$imagewidth = 100;
-$imageheight = 100 ;
- $mode = 'grid';
-  $title = __('Top Selling Items').' '.$block->getCurrentCategorytop()->getName().' Products';;
-  
- $type = 'widget-bestseller-grid';
- $image = 'bestseller_products_content_widget_grid';
-}
-?>
-<div class="home-top-selling-items">
- <div class="block-title">
+        $fet_prodcollection = $block->getTopBestsellerProduct();
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+        $productcount = $this->getProductLimit();
+        $imagewidth = 100;
+        $imageheight = 100 ;
+        $mode = 'grid';
+        $title = __('Top Selling Items').' '.$block->getCurrentCategorytop()->getName().' Products';;
+
+        $type = 'widget-bestseller-grid';
+        $image = 'bestseller_products_content_widget_grid';
+    }
+    ?>
+    <div class="home-top-selling-items">
+        <div class="block-title">
             <strong role="heading" aria-level="2"><h3><?php /* @escapeNotVerified */ echo $title; ?></h3></strong>
         </div>
-<?php if ($exist):?>
-  <div class="block widget block-bestseller-products <?php /* @escapeNotVerified */ echo $mode; ?>">
-   
-       
-<div class="block-content">
- <?php /* @escapeNotVerified */ echo '<!-- ' . $image . '-->' ?>
- <div class="products-<?php /* @escapeNotVerified */ echo $mode; ?> <?php /* @escapeNotVerified */ echo $mode; ?>">
-                <ol class="product-items <?php /* @escapeNotVerified */ echo $type; ?>">
-                    <?php $iterator = 1; 
-                    
-                    $prod_count = 1; 
-                    ?>
-    <?php foreach ($fet_prodcollection as $item_id=>$item_id_qty):     
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-$_product = $block->getProductDetails($item_id);
-$product_url = $this->getProductUrls($item_id);
-$rating_code =  $this->getDirectQuery($item_id); 
+        <?php if ($exist):?>
+            <div class="block widget block-bestseller-products <?php /* @escapeNotVerified */ echo $mode; ?>">
+                <div class="block-content">
+                    <?php /* @escapeNotVerified */ echo '<!-- ' . $image . '-->' ?>
+                    <div class="products-<?php /* @escapeNotVerified */ echo $mode; ?> <?php /* @escapeNotVerified */ echo $mode; ?>">
+                        <ol class="product-items <?php /* @escapeNotVerified */ echo $type; ?>">
+                            <?php 
+                            $iterator = 1;
+                            $prod_count = 1; 
+                            ?>
+                            <?php foreach ($fet_prodcollection as $item_id=>$item_id_qty):     
+                            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                            $_product = $block->getProductDetails($item_id);
 
-//$_product = $block->getLoadProduct($item->getProductId());
-$review = $objectManager->get('\Magento\Catalog\Block\Product\AbstractProduct');
+                            $product_url = $this->getProductUrls($item_id);
+                            $rating_code =  $this->getDirectQuery($item_id); 
 
- $rating = '';
-if(!empty($rating_code))
-{
-    $rating = $rating_code['vote_value_sum'];
-}
-    ?>
-    
-    
-     <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="product-item">' : '</li><li class="product-item">' ?>
-                        <div class="product-item-info">
-                         <?php 
-                $image_url = $block->imageHelperObj()->init($_product, 'product_page_image_medium')->constrainOnly(FALSE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(375)->getUrl();
+                            $review = $objectManager->get('\Magento\Catalog\Block\Product\AbstractProduct');
 
-?>
+                            $rating = '';
+                            if(!empty($rating_code))
+                            {
+                                $rating = $rating_code['vote_value_sum'];
+                            }
+                            ?><?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="product-item">' : '</li><li class="product-item">' ?>
+                            <div class="product-item-info">
+                                <?php 
+                                $image_url = $block->imageHelperObj()->init($_product, 'product_page_image_medium')->constrainOnly(FALSE)->keepAspectRatio(TRUE)->keepFrame(FALSE)->resize(375)->getUrl();
 
-
-
-
-                            <a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product-item-photo">
-                               <img src="<?php echo  $image_url;?>" alt="<?php echo $this->escapeHtml($_product->getName()) ?>" />
-                            </a>
-                            <div class="product-item-details">
-                                <strong class="product-item-name">
-                                    <a title="<?php echo $block->escapeHtml($_product->getName()) ?>"
-                                       href="<?php /* @escapeNotVerified */ echo $product_url  ?>"
-                                       class="product-item-link">
-                                        <span class="category_name_temp" > <?php //echo $category_name; ?></span> <?php echo $block->escapeHtml($_product->getName()); ?>
-                                    </a>
-                                </strong>
-
-<div class="star-wrapper">
-            
-<?php echo $review->getReviewsSummaryHtml($_product,"short",true);  ?>
-                    </div>
-                                <?php //endif; ?>
-<!--                    </div>-->
-        <div class="temp-price" >
-                                <?php
-                                $package_details = ''; 
-                                if($_product->getPackageDetails() != '')
-                                {
-                                    $package_details = '/ '. $_product->getPackageDetails();
-                                }else{
-                                    $package_details = '/ each';
-                                }
-                                echo $this->getCurrentCurrencySymbol().number_format($_product->getPrice(), '2', '.', ',').$package_details;
                                 ?>
-                                </div>
-                                 
+                                <a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product-item-photo">
+                                    <img src="<?php echo  $image_url;?>" alt="<?php echo $this->escapeHtml($_product->getName()) ?>" />
+                                </a>
+                                <div class="product-item-details">
+                                    <strong class="product-item-name">
+                                        <a title="<?php echo $block->escapeHtml($_product->getName()) ?>"
+                                            href="<?php /* @escapeNotVerified */ echo $product_url  ?>"
+                                            class="product-item-link">
+                                            <span class="category_name_dckap" > <?php //echo $category_name; ?></span> <?php echo $block->escapeHtml($_product->getName()); ?>
+                                        </a>
+                                    </strong>
+                                    <div class="star-wrapper">
+                                        <?php echo $review->getReviewsSummaryHtml($_product,"short",true);  ?>
+                                    </div>
+                                    <?php $session = $objectManager->create('Magento\Customer\Model\Session');
+                                    $custom_price = '';
+                                    if($session->isLoggedIn()) {                                        
+                                        $id = $session->getCustomerId();
+                                        
+                                        $customer = $objectManager->create('Magento\Customer\Model\Customer')->load($id);
+                                        $jsonoutput = $customer->getData('custom_product_price');
+                                        $custom_price = json_decode($jsonoutput,true);
+                                        if(array_key_exists($_product->getSku(),$custom_price))
+                                            $custom_price = $custom_price[$_product->getSku()];
+                                        else
+                                            $custom_price = $_product->getPrice();
+                                    }else{
+                                        $custom_price = $_product->getPrice(); } ?>
+                                    <div class="dckap-price" >
+                                        <?php
+                                        $package_details = ''; 
+                                        if($_product->getPackageDetails() != '')
+                                        {
+                                            $package_details = '/ '. $_product->getPackageDetails();
+                                        }else{
+                                            $package_details = '/ each';
+                                        }
+                                        echo $this->getCurrentCurrencySymbol().number_format($custom_price, '2', '.', ',').$package_details;
+                                        ?>
+                                    </div>
                                     <div class="product-item-actions">
-                                       
-                                            <div class="actions-primary">
-                                                <?php if ($_product->isSaleable()): ?>
-                                                    <?php if ($_product->getTypeInstance()->hasRequiredOptions($_product)): ?>
-                                                        <div class="product-add-form">
-    <form action="<?php echo $block->getAddToCartUrl($_product); ?> " method="post" id="product_addtocart_form" novalidate="novalidate">
-        <input type="hidden" name="product" value="<?php echo $_product->getId(); ?>">
-        <input type="hidden" name="selected_configurable_option" value="">
-        <input type="hidden" name="related_product" id="related-products-field" value="">
-        <input name="form_key" type="hidden" value="BFtNKHCvAmjXAQ66">                            <div class="box-tocart">
-    <div class="fieldset">
-                
-                <div class="actions">
-            <button type="submit" title="Add to Cart" class="action primary tocart" id="product-addtocart-button">
-                <span>Add to Cart</span>
-            </button>
-                    </div>
-    </div>
-    </form>
-</div>
+                                        <div class="actions-primary">
+                                            <?php if ($_product->isSaleable()): ?>
+                                                <?php if ($_product->getTypeInstance()->hasRequiredOptions($_product)): ?>
+                                                    <div class="product-add-form">
+                                                        <form action="<?php echo $block->getAddToCartUrl($_product); ?> " method="post" id="product_addtocart_form" novalidate="novalidate">
+                                                            <input type="hidden" name="product" value="<?php echo $_product->getId(); ?>">
+                                                            <input type="hidden" name="selected_configurable_option" value="">
+                                                            <input type="hidden" name="related_product" id="related-products-field" value="">
+                                                            <input name="form_key" type="hidden" value="BFtNKHCvAmjXAQ66">                            
+                                                            <div class="box-tocart">
+                                                                <div class="fieldset">
+                                                                    <div class="actions">
+                                                                        <button type="submit" title="Add to Cart" class="action primary tocart" id="product-addtocart-button">
+                                                                            <span>Add to Cart</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     <?php else: ?>
                                                         <?php
-                                                            $postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
-                                                            $postData = $postDataHelper->getPostData($block->getAddToCartUrl($_product), ['product' => $_product->getId()]);
+                                                        $postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
+                                                        $postData = $postDataHelper->getPostData($block->getAddToCartUrl($_product), ['product' => $_product->getId()]);
                                                         ?>
                                                         <button class="action tocart primary"
-                                                                data-post='<?php /* @escapeNotVerified */ echo $postData; ?>'
-                                                                type="button" title="<?php /* @escapeNotVerified */ echo __('Add to Cart') ?>">
-                                                            <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
-                                                        </button>
-                                                    <?php endif; ?>
-                                                <?php else: ?>
-                                                    <?php if ($_product->getIsSalable()): ?>
-                                                        <div class="stock available"><span><?php /* @escapeNotVerified */ echo __('In stock') ?></span></div>
-                                                    <?php else: ?>
-                                                        <div class="stock unavailable"><span><?php /* @escapeNotVerified */ echo __('Out of stock') ?></span></div>
-                                                    <?php endif; ?>
+                                                        data-post='<?php /* @escapeNotVerified */ echo $postData; ?>'
+                                                        type="button" title="<?php /* @escapeNotVerified */ echo __('Add to Cart') ?>">
+                                                        <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
+                                                    </button>
                                                 <?php endif; ?>
-                                            </div>
-                                       
-                                       
+                                            <?php else: ?>
+                                                <?php if ($_product->getIsSalable()): ?>
+                                                    <div class="stock available"><span><?php /* @escapeNotVerified */ echo __('In stock') ?></span></div>
+                                                <?php else: ?>
+                                                    <div class="stock unavailable"><span><?php /* @escapeNotVerified */ echo __('Out of stock') ?></span></div>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-                             
-                            </div>    
-       </div>
-     			<?php echo($iterator == count($fet_prodcollection)+1) ? '</li>' : '' ?>
-                    <?php 
-                    if($prod_count == 5)
-                    {
-                        break;
-                    }
-                    
-                    endforeach ?>
-</ol>
-</div>
-</div>
-</div>
-</div>
-
-<?php endif;
+                                </div>    
+                            </div>
+                            <?php echo($iterator == count($fet_prodcollection)+1) ? '</li>' : '' ?>
+                            <?php 
+                            if($prod_count == 5)
+                            {
+                                break;
+                            }
+                            endforeach ?>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif;
 }else {
-    
-
-
-if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())): 
-
-
-$imagewidth = 100;
-$imageheight = 100 ;
-
-  $title = $block->getTitle() ? __($block->getTitle()) : 'Top Selling '; 
-$items = $block->getProductCollection()->getItems();
- $showWishlist = true;
+    if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())): 
+        $imagewidth = 100;
+    $imageheight = 100 ;
+    $title = $block->getTitle() ? __($block->getTitle()) : 'Top Selling '; 
+    $items = $block->getProductCollection()->getItems();
+    $showWishlist = true;
     $showCompare = true;
     $showCart = true;
     $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
     $description = false;
 
-?>
-<?php
     $type = 'widget-product-grid';
-
     $mode = 'grid';
-
     $image = 'new_products_content_widget_grid';
-   
-   ?>
 
-<div class="home-top-selling-items">
- 
-<?php if ($exist):?>
-  <div class="block widget block-bestseller-products <?php /* @escapeNotVerified */ echo $mode; ?>">
-   <div class="block-title">
-            <strong role="heading" aria-level="2"><h3><?php /* @escapeNotVerified */ echo $title.' '.$block->getCurrentCategorytop()->getName().' Products'; ?></h3></strong>
-        </div>
-       
-<div class="block-content">
- <?php /* @escapeNotVerified */ echo '<!-- ' . $image . '-->' ?>
- <div class="products-<?php /* @escapeNotVerified */ echo $mode; ?> <?php /* @escapeNotVerified */ echo $mode; ?>">
-                <ol class="product-items widget-viewed-grid">
-                    <?php $iterator = 1; ?>
-    <?php foreach ($items as $item):     
-
- 
     ?>
-    
-    
-     <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="product-item">' : '</li><li class="product-item">' ?>
-                        <div class="product-item-info">
-                            <a href="<?php /* @escapeNotVerified */ echo $block->getProductUrl($item) ?>" class="product-item-photo">
-                                <?php $image='top_selling_items'; echo $block->getImage($item, $image)->toHtml(); ?>
-                            </a>
-                         <?php 
-                
-
-
-
-
-
-?>
-
-
-
-
-                           
-                            <div class="product-item-details">
-                                <strong class="product-item-name">
-                                     <a title="<?php echo $block->escapeHtml($item->getName()) ?>"
-                                       href="<?php /* @escapeNotVerified */ echo $block->getProductUrl($item) ?>"
-                                       class="product-item-link">
-                                        <?php echo $block->escapeHtml($item->getName()) ?>
+    <div class="home-top-selling-items">
+        <?php if ($exist):?>
+            <div class="block widget block-bestseller-products <?php /* @escapeNotVerified */ echo $mode; ?>">
+                <div class="block-title">
+                    <strong role="heading" aria-level="2"><h3><?php /* @escapeNotVerified */ echo $title.' '.$block->getCurrentCategorytop()->getName().' Products'; ?></h3></strong>
+                </div>
+                <div class="block-content">
+                    <?php /* @escapeNotVerified */ echo '<!-- ' . $image . '-->' ?>
+                    <div class="products-<?php /* @escapeNotVerified */ echo $mode; ?> <?php /* @escapeNotVerified */ echo $mode; ?>">
+                        <ol class="product-items widget-viewed-grid">
+                            <?php $iterator = 1; ?>
+                            <?php foreach ($items as $item):     ?>
+                                <?php /* @escapeNotVerified */ echo($iterator++ == 1) ? '<li class="product-item">' : '</li><li class="product-item">' ?>
+                                <div class="product-item-info">
+                                    <a href="<?php /* @escapeNotVerified */ echo $block->getProductUrl($item) ?>" class="product-item-photo">
+                                        <?php $image='top_selling_items'; echo $block->getImage($item, $image)->toHtml(); ?>
                                     </a>
-                                </strong>
-
-
-           <div class="star-wrapper">
-            <?php 
-           
-            
-            if ($templateType): ?>
-                                    <?php echo $block->getReviewsSummaryHtml($item,"short",true) ?>
-                                <?php endif; ?>
-                    </div>
-        <div class="temp-price" >
-                                <?php
-                                $package_details = ''; 
-                                 
-                                if($item->getPackageDetails() != '')
-                                {
-                                    $package_details = '/ '. $item->getPackageDetails();
-                                }else{
-                                    $package_details = '/ each';
-                                }
-                                 echo $block->getCurrentCurrencySymbol().number_format($item->getFinalPrice(), '2', '.', ',').$package_details;
-                                ?>
-                                </div>
-                                 
-                                    <div class="product-item-actions">
-                                       
+                                    <div class="product-item-details">
+                                        <strong class="product-item-name">
+                                            <a title="<?php echo $block->escapeHtml($item->getName()) ?>"
+                                                href="<?php /* @escapeNotVerified */ echo $block->getProductUrl($item) ?>"
+                                                class="product-item-link">
+                                                <?php echo $block->escapeHtml($item->getName()) ?>
+                                            </a>
+                                        </strong>
+                                        <div class="star-wrapper">
+                                            <?php 
+                                            if ($templateType): ?>
+                                            <?php echo $block->getReviewsSummaryHtml($item,"short",true) ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php 
+                                    $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
+                                    $session = $objectManager->create('Magento\Customer\Model\Session');
+                                    $custom_price = '';
+                                    if($session->isLoggedIn()) {                                        
+                                        $id = $session->getCustomerId();
+                                        
+                                        $customer = $objectManager->create('Magento\Customer\Model\Customer')->load($id);
+                                        $jsonoutput = $customer->getData('custom_product_price');
+                                        $custom_price = json_decode($jsonoutput,true);
+                                        if(array_key_exists($item->getSku(),$custom_price))
+                                            $custom_price = $custom_price[$item->getSku()];
+                                        else
+                                            $custom_price = $item->getFinalPrice();
+                                    }else{
+                                        $custom_price = $item->getFinalPrice(); } ?>
+                                        <div class="dckap-price" >
+                                            <?php
+                                            $package_details = ''; 
+                                            if($item->getPackageDetails() != '')
+                                            {
+                                                $package_details = '/ '. $item->getPackageDetails();
+                                            }else{
+                                                $package_details = '/ each';
+                                            }
+                                            echo $block->getCurrentCurrencySymbol().number_format($custom_price, '2', '.', ',').$package_details;
+                                            ?>
+                                        </div>
+                                        <div class="product-item-actions">
                                             <div class="actions-primary">
                                                 <?php if ($item->isSaleable()): ?>
                                                     <?php if ($item->getTypeInstance()->hasRequiredOptions($item)): ?>
                                                         <div class="product-add-form">
-    <form action="<?php echo $block->getAddToCartUrl($item); ?> " method="post" id="product_addtocart_form" novalidate="novalidate">
-        <input type="hidden" name="product" value="<?php echo $item->getId(); ?>">
-        <input type="hidden" name="selected_configurable_option" value="">
-        <input type="hidden" name="related_product" id="related-products-field" value="">
-        <input name="form_key" type="hidden" value="BFtNKHCvAmjXAQ66">                            <div class="box-tocart">
-    <div class="fieldset">
-                
-                <div class="actions">
-            <button type="submit" title="Add to Cart" class="action primary tocart" id="product-addtocart-button">
-                <span>Add to Cart</span>
-            </button>
-                    </div>
-    </div>
-    </form>
-</div>
-                                                    <?php else: ?>
-                                                        <?php
+                                                            <form action="<?php echo $block->getAddToCartUrl($item); ?> " method="post" id="product_addtocart_form" novalidate="novalidate">
+                                                                <input type="hidden" name="product" value="<?php echo $item->getId(); ?>">
+                                                                <input type="hidden" name="selected_configurable_option" value="">
+                                                                <input type="hidden" name="related_product" id="related-products-field" value="">
+                                                                <input name="form_key" type="hidden" value="BFtNKHCvAmjXAQ66">                            
+                                                                <div class="box-tocart">
+                                                                    <div class="fieldset">
+                                                                        <div class="actions">
+                                                                            <button type="submit" title="Add to Cart" class="action primary tocart" id="product-addtocart-button">
+                                                                                <span>Add to Cart</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        <?php else: ?>
+                                                            <?php
                                                             $postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
                                                             $postData = $postDataHelper->getPostData($block->getAddToCartUrl($item), ['product' => $item->getId()]);
-                                                        ?>
-                                                        <button class="action tocart primary"
-                                                                data-post='<?php /* @escapeNotVerified */ echo $postData; ?>'
-                                                                type="button" title="<?php /* @escapeNotVerified */ echo __('Add to Cart') ?>">
+                                                            ?>
+                                                            <button class="action tocart primary"
+                                                            data-post='<?php /* @escapeNotVerified */ echo $postData; ?>'
+                                                            type="button" title="<?php /* @escapeNotVerified */ echo __('Add to Cart') ?>">
                                                             <span><?php /* @escapeNotVerified */ echo __('Add to Cart') ?></span>
                                                         </button>
                                                     <?php endif; ?>
@@ -291,23 +258,18 @@ $items = $block->getProductCollection()->getItems();
                                                     <?php endif; ?>
                                                 <?php endif; ?>
                                             </div>
-                                       
-                                       
-                                    </div>
-                             
-                            </div>    
-       </div>
-     			<?php echo($iterator  == count($items)+1) ? '</li>' : '' ?>
-                    <?php endforeach ?>
-</ol>
-</div>
-</div>
-</div>  
-</div>
-
-<?php endif;?>
+                                        </div>
+                                    </div>    
+                                </div>
+                                <?php echo($iterator  == count($items)+1) ? '</li>' : '' ?>
+                            <?php endforeach ?>
+                        </ol>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    <?php endif;?>
 <?php endif;
-
 }
 ?>
 <script>
@@ -319,22 +281,17 @@ $items = $block->getProductCollection()->getItems();
     ], function ($) {
         'use strict';
         $('.rating-input').click(function(event){
-        event.preventDefault();
-       
-    })
-        
+            event.preventDefault();
+        })
         $('#product_addtocart_form').mage('validation', {
             radioCheckboxClosest: '.nested',
             submitHandler: function (form) {
                 var widget = $(form).catalogAddToCart({
                     bindSubmit: false
                 });
-
                 widget.catalogAddToCart('submitForm', $(form));
-
                 return false;
             }
         });
     });
 </script>
-

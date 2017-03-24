@@ -45,14 +45,14 @@
 
         <?php $productCollection = $block->getShoppinglistProduct($item_id); ?>
 
-        <table id="shoping_item" class="product_temptable">
+        <table id="shoping_item" class="product_dckaptable">
             <tbody>
                 <tr class="prouct-tabel">
                     <th style=" width: 90px;">Item Code</th>
                     <th style=" width: 50%;">Description</th>
                     <th>Quantity</th>
                     <th>Add to Cart</th>
-                    <th><a class="delete temp-sprite"></a></th>
+                    <th><a class="delete dckap-sprite"></a></th>
                 </tr>   
 
                 <?php 
@@ -71,7 +71,7 @@
                                 <input type="hidden" class="old_qty" value="<?php echo $product['qty']; ?>" />
                             </td>
                             <td><input type="checkbox" name="bulk[]" style="width:13px;cursor:pointer" checked="checked" value="<?php echo $product['item_id'];?>" /></td>
-                            <td><a title="Delete Row" href="javascript:void(0);" class="delete-ico temp-sprite"></a><input type="hidden" value="<?php echo $product['shopping_list_item_id'];?>" ></td>
+                            <td><a title="Delete Row" href="javascript:void(0);" class="delete-ico dckap-sprite"></a><input type="hidden" value="<?php echo $product['shopping_list_item_id'];?>" ></td>
                         </tr>  
 
                 <?php } }else{ ?>

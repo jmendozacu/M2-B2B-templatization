@@ -1,0 +1,39 @@
+<div class="sign-register dckap-content">
+  <?php
+  $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+  $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+
+  if( $this->getRequest()->getModuleName() == 'checkout' &&  $this->getRequest()->getControllerName() == 'index')
+  {
+    ?>
+    <a class="edit-cart-checkout" href ="<?php echo $this->getBaseUrl().'checkout/cart'; ?>" ><i class="cart-ico"></i> <span>edit cart</span> </a>
+    <?php
+  }
+
+  if(!$customerSession->isLoggedIn()) {
+    ?>
+    <a class="button register-butt" title="Sign In / Register" style="font-size: 25px;position: absolute;top: -65px;right: 0;" href="#popup1">Sign In / Register</a>
+
+    <?php
+  }else {
+    ?>
+    <button type="button" title="Logout" style="font-size: 25px;position: absolute;top: -56px;right: 0;" onclick="location.href='<?php echo $block->getUrl('').'customer/account/logout/'; ?>'" class="register-butt">Logout</button>
+    <?php
+  }
+  ?>
+</div>
+
+<script type="text/javascript">
+  require(['jquery'], function(jQuery){
+    jQuery(document).ready(function () {
+      jQuery( ".register-butt" ).click(function() {
+        jQuery('.dckap-jmenu').hide();
+        jQuery( ".popup-flag" ).each(function( index ) {
+          jQuery(this).hide();
+
+        });
+
+      });
+    });
+  });
+</script>

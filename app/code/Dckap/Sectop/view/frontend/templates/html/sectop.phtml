@@ -1,0 +1,24 @@
+<?php echo $this->getChildHtml('topSearch');  ?> 
+<?php
+$customer = $block->getCustomerloggedin(); ?>
+<script type="text/javascript">
+  var customer ="<?php echo $customer ?>";
+  require(['jquery'], function($){ 
+    $(document ).ready(function() {
+      if(customer == 0){
+        $('.header.content').css('width','83%');
+        $('.header.content').addClass('header-dckap');
+      }
+      else{
+        $('.header.content').addClass('header-dckap-login');
+      }
+      if(document.URL == location.protocol+'//'+location.hostname+'/'+'checkout/'){
+        if(customer == 0){
+          $('.edit-cart-checkout').addClass('header-edit-cart');
+        }else{
+          $('.edit-cart-checkout').addClass('header-login-edit-cart');
+        }
+      }
+    })
+  });
+</script>

@@ -10,15 +10,15 @@ $results = $connection->fetchAll($sql); ?>
 <br />
 <br />
 <h4>Uploaded Tax Exemption Certification</h4>
-<table class="product_temptable" style="width:100% !important;">
-<tr><th>State</th><th>File Name</th></tr>
-<tbody>
-<?php 
-if(count($results)){ 
-foreach($results as $result):?>
-  <tr><td><?php echo $result['state_name'] ?></td><td><a target = "_blank" href=<?php echo $mediaurl."customer/taxcertificates/".$this->getRequest()->getParam('id')."/".$result['file_name']; ?> ><?php echo $result['file_name'] ?></a></td></tr>
-<?php endforeach; } else { ?>
-  <tr><td>No records found.</td></tr>
-  <?php } ?>
-</tbody>
+<table class="product_dckaptable" style="width:100% !important;">
+	<tr><th>State</th><th>File Name</th></tr>
+	<tbody>
+		<?php 
+		if(count($results)){ 
+			foreach($results as $result):?>
+			<tr><td><?php echo $result['state_name'] ?></td><td><a target = "_blank" href=<?php echo $mediaurl."customer/taxcertificates/".$this->getRequest()->getParam('id')."/".$result['file_name']; ?> ><?php echo $result['file_name'] ?></a></td></tr>
+		<?php endforeach; } else { ?>
+		<tr><td>No records found.</td></tr>
+		<?php } ?>
+	</tbody>
 </table>

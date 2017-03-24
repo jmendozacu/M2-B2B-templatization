@@ -1,0 +1,160 @@
+<?php
+/**
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*
+* @var $block \Magento\Customer\Block\Account
+*/
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$loginvalue = $objectManager->get('Dckap\Ajaxlogin\Remembermecookie')->get('rememberme');
+$username = '';
+$password = '';
+$chkbox = '';
+if($loginvalue){
+  $val = json_decode($loginvalue);
+  $username = $val->username;
+  $password = $val->password;
+  $chkbox = $val->remchkbox;
+}
+?>
+
+<div id="ajaxlogin" class="overlay-ajaxlogin dckap-content" style="display: none;">
+  <div class="slide-ajaxlogin">
+    <div class="content">
+      <div class="register-popup-error-message">
+        <div id="login_error" class="message message-error error" style="display: none;">
+          <div id="customer_error" data-ui-id="messages-message-error"></div>
+        </div>
+      </div>
+      <div class="block block-customer-login">
+        <div class="login-action">
+          <div class="block-content" aria-labelledby="block-customer-login-heading">
+            <div id="ajax_login" style="display: none;"><img width="40" height="40" src="<?php echo $this->getBaseUrl()."/pub/static/frontend/Magento/dckap/en_US/Dckap_Quickorder/images/loading.gif" ?>" ></div>
+            <form class="form form-login"
+            action="<?php echo $this->getUrl('ajaxlogin/account/ajaxlogin'); ?>"
+            method="post"
+            id="login-form"
+            data-mage-init='{"validation":{}}'>
+              <?php echo $block->getBlockHtml('formkey'); ?>
+              <fieldset class="fieldset login" data-hasrequired="* Required Fields">
+                <!--<div class="field note">If you have an account, sign in with your email address.</div> -->
+                <div class="field email required">
+                  <!-- <label class="label" for="email"><span>Email</span></label> -->
+                  <div class="control">
+                  <input name="login[username]" value="<?php if($username){ echo $username; } ?>" autocomplete="off" id="email" type="email" class="input-text" title="Email" data-validate="{required:true, 'validate-email':true}" aria-required="true" placeholder="Email">
+                  </div>
+                </div>
+                <div class="field password required">
+                  <!-- <label for="pass" class="label"><span>Password</span></label>-->
+                  <div class="control">
+                  <input name="login[password]" type="password" autocomplete="off" class="input-text" id="pass" value="<?php if($password){ echo $password; } ?>" title="Password" data-validate="{required:true, 'validate-password':true}" aria-required="true" placeholder="Password">
+                  </div>
+                </div>
+
+                <div class="field password required ajax-popup-fp">
+                  <!-- <label for="pass" class="label"><span>Password</span></label>-->
+                  <div class="control">
+                  <input type="checkbox" name="rememberme" id="rememberme" value="" <?php if($chkbox){ ?>checked="checked"<?php } ?> style="width: auto;">Remember me
+                  </div>
+                </div>
+                <div class="secondary" style="display: inherit;"><a class="action remind" href="<?php echo $block->getBaseUrl().'customer/account/forgotpassword/'?>"><span><?php /* @escapeNotVerified */ echo __('Forgot Your Password?') ?></span></a></div>
+                <div class="actions-toolbar">
+                  <div class="primary"><button type="button" class="action login primary" name="send" id="send2"><span><?php /* @escapeNotVerified */ echo __('Login') ?></span></button>
+                  </div>
+
+                </div>
+
+                <div class="have-an-account">
+                  <div class="primary"><a href="<?php echo $this->getUrl('customer/account/create'); ?>" type="button" class="action login primary" name="send" id="send2"><span><?php /* @escapeNotVerified */ echo __('Register') ?></span></a></div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+require( [ 'jquery' ], function ( jQuery, Services )
+{
+  jQuery('.button.register-butt').on("click",function(){
+    
+    var t = jQuery('#ajaxlogin');
+
+    if (t.is(':visible')) {
+      t.hide();
+      jQuery( '#customer_error').html('');
+    } else {
+      t.show();
+    }
+  });
+
+  jQuery( "#send2").on( "click", function() {
+    jQuery( '#login_error').hide();
+    jQuery( '#customer_error').html('');
+    var email = jQuery('#email').val();
+    var pass = jQuery('#pass').val();
+    var rememberchkbox = jQuery('#rememberme').is(':checked');
+    jQuery('#ajax_login').show();
+    jQuery.ajax({
+      url:"<?php echo $this->getUrl('ajaxlogin/account/ajaxlogin'); ?>",
+      type: 'post',
+      dataType: "json",
+      contentType: 'application/x-www-form-urlencoded',
+      data: {'email' :email,'pass':pass,  'rememberme':rememberchkbox},
+      
+      complete: function(response ){
+        jQuery('#ajax_login').hide();
+
+        var obj = jQuery.parseJSON( response.responseText );
+        if( obj.error != ''){
+
+          jQuery( '#login_error').show();
+          jQuery( '#customer_error').html(obj.error);
+        }else if( obj.url != '' &&  obj.url == 'success')
+        {
+          window.location.href="<?php echo $this->getUrl('customer/account/'); ; ?>"
+        }else if( obj.url != '' &&  obj.url != 'success')
+        {
+          window.location.href=obj.url;
+        }else
+        {
+          jQuery( '#login_error').show();
+          jQuery( '#customer_error').html("Something went wrong! please contact adminstrator");
+        }
+
+      },
+      error: function( errorThrown ){
+        console.log( errorThrown );
+      }
+    });
+  });
+  jQuery('#email').keypress(function(e){
+    if(e.which == 13){  //Enter key pressed
+      jQuery('#send2').click(); //Trigger search button click event
+    }
+  });
+  jQuery('#pass').keypress(function(e){
+    if(e.which == 13){  //Enter key pressed
+      jQuery('#send2').click(); //Trigger search button click event
+    }
+  });
+});
+
+require(['jquery'], function($){
+  $(document).mouseup(function (e)
+  {
+    var container = $("#ajaxlogin");
+
+    if (!container.is(e.target) && container.has(e.target).length === 0)
+    {
+      container.hide();
+    }
+  });
+});
+
+</script>
