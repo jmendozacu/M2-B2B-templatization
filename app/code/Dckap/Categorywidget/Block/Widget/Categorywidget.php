@@ -25,7 +25,7 @@ class Categorywidget extends \Magento\Framework\View\Element\Template implements
     \Magento\Framework\Registry $registry,
     \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
     array $data = []
-  )
+    )
   {
     $this->_resourceFactory = $resourceFactory;
     $this->_storeManager=$storeManager;
@@ -49,7 +49,7 @@ class Categorywidget extends \Magento\Framework\View\Element\Template implements
       $this->setTemplate( 'widget/categorywidget.phtml');
     }
 
-  parent::__construct($context, $data);
+    parent::__construct($context, $data);
   }
   public function getNoCategoryUrl()
   {
@@ -72,7 +72,7 @@ class Categorywidget extends \Magento\Framework\View\Element\Template implements
     $limit = $this->getProductLimit();
     $productdetails = array();
     $nonproductdetails = array();
-   
+    
     $connection = \Magento\Framework\App\ObjectManager::getInstance()->create('\Magento\Framework\App\ResourceConnection');
     $conn = $connection->getConnection();
     $sql = "SELECT MAX(DATE_FORMAT(period, '%Y-%m-%d')) AS `period`, SUM(qty_ordered) "
@@ -89,7 +89,7 @@ class Categorywidget extends \Magento\Framework\View\Element\Template implements
     $items_qty_ordered = array();
     foreach ($resourceCollection as $item):  
       $item_ids[]=$item['product_id'];
-      $items_qty_ordered[$item['product_id']]=$item['qty_ordered'];
+    $items_qty_ordered[$item['product_id']]=$item['qty_ordered'];
     endforeach;
     
     $collection = $this->_categoryFactory->create()->load($category_id)->getProductCollection()->addAttributeToSelect('*');
@@ -102,14 +102,14 @@ class Categorywidget extends \Magento\Framework\View\Element\Template implements
       }else{
         $nonproductdetails[$product->getId()] = 0;
       }
-    endforeach;
-    arsort($productdetails);
+      endforeach;
+      arsort($productdetails);
 
-    if(count($productdetails) < 3 && count($productdetails) != 0 && count($nonproductdetails) != 0){
-      $noproddetails = count($nonproductdetails);
-      $needed = 3- count($productdetails);
-      $noproddetails;
-      if($noproddetails != 0){
+      if(count($productdetails) < 3 && count($productdetails) != 0 && count($nonproductdetails) != 0){
+        $noproddetails = count($nonproductdetails);
+        $needed = 3- count($productdetails);
+        $noproddetails;
+        if($noproddetails != 0){
         if($noproddetails <= $needed){ //having lesser than needed
           $n = $noproddetails;
           $nonproductdetails = array_slice($nonproductdetails, 0, $noproddetails, true);

@@ -13,12 +13,12 @@
 <form method="post" action ="history">
     <div style="float:left; width:30%">
         <input type="text" classplaceholder="Search..." required name="search_id" style="width:70%;margin-bottom: 15px;">
-        <input type="submit" title="Search" value="Search" class="temp-button">
+        <input type="submit" title="Search" value="Search" class="dckap-button">
     </div>
     <a class="order_search_clr" href="<?php echo $block->getBaseUrl().'orderhistory/order/history/'; ?>">Clear</a>
 </form>
 <div class="table-wrapper orders-recent">
-    <table class="product_temptable" id="my-orders-table">
+    <table class="product_dckaptable" id="my-orders-table">
         <tbody>
             <tr class="prouct-tabel">
                 <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Order #') ?></th>
@@ -29,49 +29,49 @@
                 <th scope="col" class="col actions"><?php /* @escapeNotVerified */ echo __('Action') ?></th>
             </tr>
 
-        <?php if ($_orders && count($_orders)): ?>
-            <?php foreach ($_orders as $_order): ?>
-                <tr>
-                    <td data-th="<?php echo $block->escapeHtml(__('Order #')) ?>" class="col id"><a href="<?php echo $block->getViewUrl($_order) ?>" ><?php echo $_order->getRealOrderId() ?></a></td>
-                    
-                    <td data-th="<?php echo $block->escapeHtml(__('Date')) ?>" class="col date"><?php $date = $block->formatDate($_order->getCreatedAt()); echo date("m/d/Y", strtotime($date)); ?></td>
-                    
-                    <td data-th="<?php echo $block->escapeHtml(__('Ship To')) ?>" class="col shipping"><?php $address = $_order->getShippingAddress()->getStreet();                     
-                        $address1 =''; 
-                        if(array_key_exists(1,$address)){
-                            $address1=', '.$address[1];
-                        }
-                        echo $_order->getShippingAddress() ? $block->escapeHtml($address[0].$address1) : '&nbsp;' ?>
-                    </td>
-                    
-                    <td data-th="<?php echo $block->escapeHtml(__('Order Total')) ?>" class="col total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
-                    
-                    <td data-th="<?php echo $block->escapeHtml(__('Status')) ?>" class="col status"><?php echo $_order->getStatusLabel() ?></td>
-                    
-                    <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
-                        <?php if ($_order->hasShipments()) : ?>
+            <?php if ($_orders && count($_orders)): ?>
+                <?php foreach ($_orders as $_order): ?>
+                    <tr>
+                        <td data-th="<?php echo $block->escapeHtml(__('Order #')) ?>" class="col id"><a href="<?php echo $block->getViewUrl($_order) ?>" ><?php echo $_order->getRealOrderId() ?></a></td>
+                        
+                        <td data-th="<?php echo $block->escapeHtml(__('Date')) ?>" class="col date"><?php $date = $block->formatDate($_order->getCreatedAt()); echo date("m/d/Y", strtotime($date)); ?></td>
+                        
+                        <td data-th="<?php echo $block->escapeHtml(__('Ship To')) ?>" class="col shipping"><?php $address = $_order->getShippingAddress()->getStreet();                     
+                            $address1 =''; 
+                            if(array_key_exists(1,$address)){
+                                $address1=', '.$address[1];
+                            }
+                            echo $_order->getShippingAddress() ? $block->escapeHtml($address[0].$address1) : '&nbsp;' ?>
+                        </td>
+                        
+                        <td data-th="<?php echo $block->escapeHtml(__('Order Total')) ?>" class="col total"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+                        
+                        <td data-th="<?php echo $block->escapeHtml(__('Status')) ?>" class="col status"><?php echo $_order->getStatusLabel() ?></td>
+                        
+                        <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
+                            <?php if ($_order->hasShipments()) : ?>
                                 <a href="<?php echo $block->getShipmentUrl($_order) ?>" class="action view">
-                                <span><?php echo __('Track Order') ?></span>
+                                    <span><?php echo __('Track Order') ?></span>
                                 </a>  <?php if ($_order->hasInvoices()) : ?>|<?php endif ?>
-                        <?php endif ?>
-                        <?php if ($_order->getData('P21_Invoice')) {
+                            <?php endif ?>
+                            <?php if ($_order->getData('P21_Invoice')) {
                                 $invoices = explode(",",$_order->getData('P21_Invoice')); ?> 
                                 <span>P21:
-                                <?php $cnt = 0; foreach($invoices as $invoice): ++$cnt; ?>
+                                    <?php $cnt = 0; foreach($invoices as $invoice): ++$cnt; ?>
                                     <a href="<?php echo $block->getInvoiceUrl($_order).'invoice_id/'.$invoice ?>" class="action order"><?php echo $invoice; ?></a>
                                     <?php if(count($invoices) > $cnt){ echo "," ;} ?>
                                 <?php  endforeach; ?>
-                                </span>
-                        <?php } else if(!$_order->hasShipments() && !$_order->getData('P21_Invoice'))
-                                echo "No Invoices Found";  ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+                            </span>
+                            <?php } else if(!$_order->hasShipments() && !$_order->getData('P21_Invoice'))
+                            echo "No Invoices Found";  ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             <?php else: ?>
                 <tr>
                     <td colspan="6"><?php echo "No Records found";?></td>
                 </tr>
-        <?php endif ?>
+            <?php endif ?>
         </tbody>
     </table>
 </div>

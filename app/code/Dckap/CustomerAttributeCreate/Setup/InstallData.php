@@ -57,7 +57,7 @@ class InstallData implements InstallDataInterface
             "default"  => "",
             "frontend" => "",
             "unique"   => false,
-            "note"     => "{'Product Sku':'Product Price','Next product Sku':'Product Price'}"
+            "note"     => 'Format: {"Product Sku":"Product Price","Next product Sku":"Product Price",etc...}'
 
         ));
 

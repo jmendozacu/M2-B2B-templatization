@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<!-- <preference for="Magento\Theme\Block\Html\Topmenu" type="Dckap\Theme\Block\Html\Topmenu" /> -->
+	<preference for="Magento\Contact\Controller\Index\Post" type="Dckap\Theme\Controller\Index\Post" />
+	<preference for="Magento\Theme\Model\Design\Backend\Logo" type="Dckap\Theme\Block\Logo" />            
+</config>

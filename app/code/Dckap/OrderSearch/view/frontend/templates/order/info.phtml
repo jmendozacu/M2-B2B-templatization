@@ -1,0 +1,73 @@
+<?php
+/**
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*/
+
+// @codingStandardsIgnoreFile
+
+?>
+<style type="text/css">
+  @media print{
+    body{ background-color:#FFFFFF; background-image:none; color:#000000 }
+    .page-header.dckap-content{ display:none;}
+    .sectop navigations.dckap-content{ display:none;}
+    .dckap-menu{ display:none;}
+    .page-bottom{ display:none;}
+    .block.block-content{ display:none;}
+    #maincontent{ width:100%;}
+    .talk-expert{display:none;}
+    .dckap-print{display: none}
+    .copyright.dckap-content{display: none}
+  }
+</style>
+<?php /** @var $block \Magento\Sales\Block\Order\Info */ ?>
+<?php $_order = $block->getOrder() ?>
+<div class="order-title">ORDER # <?php echo $_order->getIncrementId(); ?></div>
+<div class="dckap-print">
+  <?php if ($this->helper('Magento\Sales\Helper\Reorder')->canReorder($_order->getEntityId())) : ?>
+<!-- <a class="action reorder" href="<?php /* @escapeNotVerified */ //echo $this->getUrl('ordersearch/status/reorder/order_id', ['order_id' => $_order->getId()]); ?>">
+<span><?php /* @escapeNotVerified */ //echo __('Reorder') ?></span>
+</a> -->
+  <?php endif ?>
+  <a class="action print" href="javascript:window.print()" onclick="this.target='_blank';">
+    <img src="<?php echo $block->getViewFileUrl('images/print.png');?>" />
+    <span><?php /* @escapeNotVerified */ echo __('Print Order') ?></span>
+  </a>
+</div>
+<div class="dckap-order-status">
+  <div class="status-delivered">
+    <h2>Status</h2>
+    <div class="shipping-address">
+      <strong><?php /* @escapeNotVerified */ echo __('Shipping Address') ?></strong>
+      <address><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getShippingAddress()); ?>
+      </address>
+      <strong>
+        <?php /* @escapeNotVerified */ echo __('Shipping Method') ?>
+      </strong>
+      <address>
+        <?php if ($_order->getShippingDescription()): ?>
+          <?php echo $block->escapeHtml($_order->getShippingDescription()) ?>
+        <?php else: ?>
+          <?php /* @escapeNotVerified */ echo __('No shipping information available'); ?>
+        <?php endif; ?>
+      </address>
+    </div>
+  </div>
+  <div class="status-delivered">
+    <h2 style="color:#e31837"><?php echo $block->getOrder()->getStatusLabel();?></h2>
+    <div class="shipping-address">
+      <strong class="box-title">
+        <?php /* @escapeNotVerified */ echo __('Billing Address') ?>
+      </strong>
+      <address><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getBillingAddress()); ?>
+      </address>
+      <strong class="box-title">
+        <?php /* @escapeNotVerified */ echo __('Payment Method') ?>
+      </strong>
+      <address>
+        <?php echo $block->getPaymentInfoHtml() ?>
+      </address>
+    </div>
+  </div>	
+</div>

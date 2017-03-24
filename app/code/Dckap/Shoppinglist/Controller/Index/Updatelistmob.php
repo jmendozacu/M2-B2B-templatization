@@ -43,7 +43,7 @@ class Updatelistmob extends \Magento\Framework\App\Action\Action {
                     $lastid = $todo->getShoppingListItemId();
                 $product_obj = $connection->get('Magento\Catalog\Model\Product')->load($product_id);
                 $len = $connection->get('Dckap\Shoppinglist\Block\Shoppinglist')->getProductOptionLabel($product_obj->getLength());
-                echo "<tr><td>".$product_obj->getSku()."</td><td><input name='qty' style='width:40px;' value='1' type='text' \><input type='hidden' name='pid' id='pid' value='".$product_id."' /></td><td><input type='checkbox' name='bulk[]' style='width:30px;' checked='checked' value='".$product_id."' /></td><td><a title='Delete Row' href='javascript:void(0);' class='delete-ico temp-sprite'></a><input type='hidden' value='".$lastid."' ></td></tr>";
+                echo "<tr><td>".$product_obj->getSku()."</td><td><input name='qty' style='width:40px;' value='1' type='text' \><input type='hidden' name='pid' id='pid' value='".$product_id."' /></td><td><input type='checkbox' name='bulk[]' style='width:30px;' checked='checked' value='".$product_id."' /></td><td><a title='Delete Row' href='javascript:void(0);' class='delete-ico dckap-sprite'></a><input type='hidden' value='".$lastid."' ></td></tr>";
                 exit;
             }
 		      

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+/**
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*/
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <link src="Dckap_Theme::js/modernizr.custom.js"/>
+        <css src="Dckap_Theme::css/component.css"/>
+    </head>
+    <body>
+        <referenceContainer name="header.panel">
+            <block class="Magento\Framework\View\Element\Html\Links" name="header.links">
+                <arguments>
+                    <argument name="css_class" xsi:type="string">header links</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_img_width" xsi:type="number">148</argument>
+                <argument name="logo_img_height" xsi:type="number">43</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="page.top">
+            <block class="Dckap\Sectop\Block\Html\Registerbutton" name="dckap.registerbutton" as="registerbutton"  template="html/registerbutton.phtml" ttl="3600" cacheable="false"/>
+            <block class="Dckap\Ajaxlogin\Block\Html\Ajaxlogin" name="dckap.ajaxlogin" as="ajaxlogin"  template="account/ajaxlogin-popup.phtml" />
+            <container name="dckaptoolbar" as="dckaptoolbar" label="Dckap Toolbar" htmlTag="div" htmlClass="sectop navigations dckap-content">
+                <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml" />
+                <block class="Dckap\Sectop\Block\Html\Sectop" name="dckap.sectop" as="dckapsectop"  template="html/sectop.phtml" ttl="3600"/>
+            </container>
+
+            <container name="custommenu" as="custommenu" label="Custom menu" htmlTag="div" htmlClass="widget block block-static-block dckap-content">
+                <block class="Dckap\Custommenu\Block\Html\Custommenu" name="dckap.custommenu" as="dckapcustommenu"  template="html/custommenu.phtml" ttl="3600"/>
+            </container>
+        </referenceContainer>
+        <referenceContainer name="columns.top">
+            <block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="html/title.phtml"/>
+            <container name="page.messages" htmlTag="div" htmlClass="page messages">
+                <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
+                <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
+            </container>
+        </referenceContainer>
+
+        <referenceContainer name="sidebar.main">
+            <arguments>
+                <argument name="group_name" xsi:type="string">navigation-sections</argument>
+                <argument name="group_css" xsi:type="string">nav-sections</argument>
+            </arguments>
+            <block class="Magento\Framework\View\Element\Template" name="store.menu" group="navigation-sections" template="Magento_Theme::html/container.phtml">
+                <arguments>
+                    <argument name="title" translate="true" xsi:type="string">Menu</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="footer">
+            <block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher" after="footer_links" template="switch/stores.phtml"/>
+        </referenceContainer>
+
+        <!-- <referenceBlock name="footer_links" remove="true" /> -->
+        <!-- <move element="copyright" destination="before.body.end"/> -->
+        <referenceBlock name="report.bugs" remove="true"/>
+        <!-- <referenceBlock name="header.panel" remove="true"/> -->
+
+        <referenceBlock name="cart_sidebar" remove="true"/>
+        <!-- <referenceBlock name="sale.reorder.sidebar" remove="true"/> -->
+        <!-- <referenceBlock name="custommenu" remove="true" /> -->
+    </body>
+</page>

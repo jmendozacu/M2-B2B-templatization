@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!--<update handle="customer_account"/>-->
+    <update handle="sales_order_item_renderers"/>
+    <update handle="sales_order_item_price"/>
+    <!--<update handle="sales_order_info_links"/>-->
+    <body>
+        <referenceContainer name="content">
+            <!-- <block class="Magento\Sales\Block\Order\View" name="order.comments" template="Dckap_OrderSearch::order/order_comments.phtml" before="sales.order.info.links"/>-->
+            <!--<block class="Magento\Sales\Block\Order\Info" name="order.status" before="sales.order.info" template="Dckap_OrderSearch::order/order_status.phtml"/>-->
+            <!--<block class="Magento\Sales\Block\Order\Info" name="order.date" template="Dckap_OrderSearch::order/order_date.phtml"/>-->
+            <block class="Magento\Sales\Block\Order\Info" as="info" name="sales.order.info" after="sales.order.view" template="Dckap_OrderSearch::order/info.phtml"/>
+            <block class="Magento\Sales\Block\Order\View" name="sales.order.view" cacheable="false" after="sales.order.info" template="Dckap_OrderSearch::order/view.phtml">
+
+                <block class="Magento\Sales\Block\Order\Items" name="order_items" template="Dckap_OrderSearch::order/items.phtml">
+                    <block class="Magento\Framework\View\Element\RendererList" name="sales.order.items.renderers" as="renderer.list" template="Dckap_OrderSearch::order/items/renderer/default.phtml"/>
+                    <block class="Magento\Sales\Block\Order\Totals" name="order_totals" template="Dckap_OrderSearch::order/totals.phtml">
+                        <arguments>
+                            <argument name="label_properties" xsi:type="string">colspan="4" class="mark"</argument>
+                            <argument name="value_properties" xsi:type="string">class="amount"</argument>
+                        </arguments>
+                        <block class="Magento\Tax\Block\Sales\Order\Tax" name="tax" template="Dckap_OrderSearch::order/tax.phtml"/>
+                    </block>
+                </block>
+            </block>
+
+        </referenceContainer>
+        <referenceBlock name="page.main.title" remove="true"/>
+
+    </body>
+</page>

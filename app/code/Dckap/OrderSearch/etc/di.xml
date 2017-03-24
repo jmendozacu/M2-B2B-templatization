@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    
+               <preference for="Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer"
+                type="Dckap\OrderSearch\Block\Order\Item\Renderer"/>
+
+                <preference for="Magento\Tax\Block\Sales\Order\Tax"
+                type="Dckap\OrderSearch\Block\Sales\Order\Tax"/>
+
+                <preference for="Magento\Sales\Block\Order\Totals"
+                type="Dckap\OrderSearch\Block\Sales\Order\Totals"/>
+
+                <preference for="Magento\Sales\Block\Order\Invoice\Totals"
+                type="Dckap\OrderSearch\Block\Sales\Order\Invoice\Totals"/>
+</config>

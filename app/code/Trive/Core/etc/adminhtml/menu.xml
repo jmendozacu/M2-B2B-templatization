@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Trive (http://www.trive.digital/) All rights reserved.
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend/etc/menu.xsd">
+    <menu>
+        <add id="Trive_Core::admin" title="Trive" module="Trive_Core" sortOrder="100" resource="Trive_Core::admin" />
+    </menu>
+</config>

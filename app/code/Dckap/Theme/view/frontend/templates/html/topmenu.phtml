@@ -1,0 +1,222 @@
+<?php
+/**
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*/
+// @codingStandardsIgnoreFile
+?>
+<?php
+/**
+* Top menu for store
+*
+* @see \Magento\Theme\Block\Html\Topmenu
+*/
+?>
+<?php
+$controllerName = $this->getRequest()->getControllerName();
+$moduleName = $this->getRequest()->getModuleName();
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$storeManager->getStore()->getBaseUrl();
+
+$current_url = $storeManager->getStore()->getCurrentUrl();
+
+$compl_curr_url = strtok($current_url, '?');
+?>
+
+<?php $columnsLimit = $block->getColumnsLimit() ? : 0; ?>
+<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit) ?>
+<?php $_dckapmenu = $block->getdckapHtml('level-top', 'submenu', $columnsLimit);
+?>
+
+<nav class="navigation" role="navigation">
+    <div id="product_cat_collapse">
+        <span><img id="img_collapse" src='<?php echo $this->getViewFileUrl('images/left.png'); ?>' alt=""></span>Products
+    </div>
+    <ul  id="cat_menu" style="display:none" >
+        <?php /* @escapeNotVerified */ echo $_menu; ?>
+    </ul>
+</nav>
+<?php
+if ($controllerName == 'product' & $moduleName == 'catalog') {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $objectManager->get('Magento\Framework\Registry')->registry('current_product');
+    if ($product && $product->getCategoryIds()) {
+        $categories = $product->getCategoryIds();
+        foreach ($categories as $key => $value) {
+            $category = $objectManager->get('Magento\Catalog\Model\Category')->load($categories[$key]);
+            foreach ($category->getParentCategories() as $values) {
+                $parent_name = $values->getName();
+                $parent_category = $values;
+                break;
+            }
+            if ($parent_name == 'Industries') {
+                continue;
+            } else {
+                $categoryId = $objectManager->get('Magento\Catalog\Model\Category')->load($categories[$key]);
+                break;
+            }
+        }
+
+        if ($parent_category) {
+            $cat_ids = $categoryId->getParentIds();
+            $childCategorys = $objectManager->get('Magento\Catalog\Model\Category')->load($cat_ids[2]);
+            $childCategory = $childCategorys->getChildrenCategories();
+            ?>
+            <ul class="children_cat">
+                <li class="parent_category"> <?php echo $parent_name; ?></li>
+                <?php
+                foreach ($childCategory as $key => $value) {
+                    ?>
+                    <li><a href="<?php echo $value->getUrl(); ?>"><?php echo $value->getName(); ?></a></li>
+                    <?php }
+                    ?>
+                </ul>
+                <?php
+            }
+        }
+    }
+    ?>
+    <script type="text/javascript">
+        var Base_url = "<?php echo $storeManager->getStore()->getBaseUrl(); ?>";
+        var controllerName = "<?php echo $controllerName; ?>";
+        var moduleName = "<?php echo $moduleName; ?>";
+        require(['jquery'], function (jQuery) {
+
+            jQuery(window).load(function () {
+
+                jQuery("li.level0.level-top.parent").on('click', function () {
+                    jQuery(".popup-head").on('click', function () {
+
+                        var current_popup = jQuery(this).attr('data-flag');
+                        jQuery(".popup-flag").each(function (index) {
+                            if (current_popup != jQuery(this).attr('id'))
+                            {
+                                jQuery(this).hide();
+                            }
+                        });
+
+                    });
+                    var main_menu =jQuery(this);
+
+                    var selected_class = jQuery(this).children('div.dckap-jmenu');
+                    var main_menu_top = jQuery(this).offset().top;
+                    selected_class.css('top', '0px');
+                    var menu_item = jQuery(this).children('div.dckap-jmenu');
+                    menu_item.css({position: "absolute", visibility: "hidden", display: "block"})
+                    selected_class.css({position: "absolute", visibility: "hidden", display: "block"})
+                    var menu_item = jQuery(this).find('ul.dckap-parent');
+                    var menu_item_offset = parseFloat(menu_item.offset().top);
+                    var sub_menu_height = parseFloat(menu_item.height());
+                    var centerY = (menu_item_offset + sub_menu_height);
+
+                    var top_px = (centerY - main_menu_top) - 100;
+                    if(jQuery(this).attr('class').indexOf("nav-1 ") != -1)
+                    {
+                        top_px = top_px - 100;
+                    }else
+                    {
+                        if (top_px < 0 && top_px > -50)
+                        {
+                            top_px = 100 + top_px;
+
+                        } else if (top_px < 0)
+                        {
+                            top_px = Math.abs(top_px);
+                        }
+
+                        if (top_px < 50)
+                        {
+                            top_px = 100 + top_px;
+                        }
+
+                    }
+                    selected_class.attr('style', 'display: block');
+                    selected_class.css('top', '-' + top_px + 'px');
+
+                    var parent_class = selected_class.parent('li').attr('class');
+
+
+                    jQuery("div.dckap-jmenu").each(function () {
+
+                        if (jQuery(this).parent('li').attr('class') != parent_class)
+                        {
+
+                            jQuery(this).attr('style', 'display: none');
+
+
+                        }
+                    });
+                    return false;
+                });
+            });
+            jQuery(document).ready(function () {
+
+                jQuery(".seeAll").each(function (index) {
+
+                    jQuery(this).attr('href', jQuery(this).parent().prev('a').attr('href'));
+                });
+
+                if (jQuery('.breadcrumbs').length != 0)
+                {
+                    var current_cate = (jQuery('.breadcrumbs').children('ul').children('li:last-child').attr('class'));
+                    current_cate = current_cate.replace('item category', '');
+
+                    jQuery('#menu-item-' + current_cate).addClass('active')
+
+                }
+
+                if ((moduleName == 'cms' && controllerName == 'index') ||(moduleName == 'ordersearch'  && controllerName == 'status') || (moduleName == 'checkout' && controllerName == 'onepage') || (moduleName == 'cms' && controllerName == 'page')|| (moduleName == 'quickrfq' && controllerName == 'index') || (moduleName == 'seo' && controllerName == 'sitemap'))
+                {
+                    jQuery('#cat_menu').attr('style', 'display:block');
+                    jQuery('#img_collapse').attr('src', "<?php echo $this->getViewFileUrl('images/right.png'); ?>");
+                }
+
+                jQuery("#product_cat_collapse").click(function () {
+                    var t = jQuery('#cat_menu');
+
+                    if (t.is(':visible')) {
+                        t.slideUp();
+                        if (jQuery('.children_cat').length != 0)
+                        {
+                            jQuery('.children_cat').show();
+                        }
+                        jQuery('#img_collapse').attr('src', "<?php echo $this->getViewFileUrl('images/left.png'); ?>");
+                    } else {
+                        t.slideDown();
+                        if (jQuery('.children_cat').length != 0)
+                        {
+                            jQuery('.children_cat').hide();
+                        }
+                        jQuery('#img_collapse').attr('src', "<?php echo $this->getViewFileUrl('images/right.png'); ?>");
+                    }
+                });
+            });
+            jQuery("a.close-sprint").on('click', function () {
+                jQuery(".dckap-jmenu").hide();
+                return false;
+            });
+
+            jQuery("div.dckap-jumbo").children('a').on('click', function () {
+                window.location.href = jQuery(this).attr('href');
+                return true;
+            });
+            jQuery("li.level1").children('a').on('click', function () {
+                window.location.href = jQuery(this).attr('href');
+                return true;
+            });
+        });
+require(['jquery'], function($){
+    $(document).mouseup(function (e)
+    {
+        var container = $(".dckap-jmenu");
+
+        if ( !container.is(e.target) && container.has(e.target).length === 0)
+        {
+            container.hide();
+        }
+
+    });
+
+});
+</script>
