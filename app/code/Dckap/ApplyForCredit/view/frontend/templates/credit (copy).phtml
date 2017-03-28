@@ -1,0 +1,59 @@
+<?php
+$base_media_path = 'dckap/customer_credit_line';
+$mediaUrl = $this->_storeManager->getStore()
+->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+$base_url = $this->_storeManager->getStore()
+->getBaseUrl(); 
+
+$block->getCreditInfo();
+?>
+<p>If you are interested, simply download an application form using the link below. Filling out an application is easy and usually takes less than 10 minutes.</p>
+<a href="<?php echo $mediaUrl. $base_media_path.'/credit_application.pdf' ?>" target="_blank" class="app-credit-down">Download PDF</a>
+<p>For your convenience, there are several ways to submit your application:</p>
+<ul class="credit_dckap">
+    <li class="list"><span class="bold">Email: </span><a href="mailto:info@dckap.com">info@dckap.com</a></li>
+    <li class="list"><span class="bold">Phone: </span> 1-877-872-3252</li>
+    <li class="list"><span class="bold">Corporate Office: </span>
+        <div class="address">
+            <p>Dckap</p>
+            <p>42840 Christy St.</p>
+            <p>Suite 230 Fremont, CA 94538</p>
+        </div>
+    </li>
+</ul>
+<p>
+<?php
+
+$collection = $block->getCreditCollections(); 
+
+if($collection) {
+    ?>
+    <div class="credit-limit">
+        <p><span> <?php /* @escapeNotVerified */ echo 'Available Credit Limit:'; ?></span><?php  echo $this->getCurrentCurrencySymbol().number_format($collection['credit_amount'],2); ?>
+        </p>
+    </div>
+<?php } ?>
+
+<form action="<?php echo $base_url;?>credit/report/uploadcredit/" method="post" enctype="multipart/form-data">
+    <?php /* @escapeNotVerified */ echo 'Upload Credit Approval:'; ?>
+    <div class="fileUpload btn btn-primary">
+        <span>Choose a File</span>
+        <input type="file" name="fileToUpload" id="fileToUpload" class="upload">
+    </div>
+    <input type="submit" value="Upload" name="submit">
+</form>
+
+<div class="uploaded-pdf">
+    <?php 
+    if($collection) {
+        $files = json_decode($collection['credit_file']);
+        if(!empty($files))
+        {
+            foreach ($files as $eachfile) { ?>
+            <a href ="<?php echo $block->getCreditFileUrl().$eachfile; ?>" target="_blank" class="avail-link"> <i class="dckap-sprite pdf-icon" ></i><?php echo basename($block->getCreditFileUrl().$eachfile);?> </a>
+            <?php }
+        }
+    }
+    ?>
+</div>

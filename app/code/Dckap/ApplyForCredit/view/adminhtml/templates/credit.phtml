@@ -1,0 +1,14 @@
+<?php
+$creditinformation = $block->getCreditInformation();
+if($creditinformation)
+{
+	?>
+	<h4>Your Credit Amount:</h4> <?php echo $creditinformation['credit_amount']; ?>
+	<?php 
+		$files = json_decode($creditinformation['credit_file']);
+		foreach ($files as $eachfile) { ?>
+			<a href ="<?php echo $block->getCreditFileUrl().$eachfile; ?>" target="_blank">file</a>
+		<?php }
+}else { ?>
+	<div> No Credit Information Available </div>
+<?php } ?>
