@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*/
 namespace Dckap\Ajaxlogin\Controller\Account;
 
 use Magento\Customer\Model\Account\Redirect as AccountRedirect;
@@ -17,8 +17,8 @@ use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
+* @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+*/
 class Login extends \Magento\Customer\Controller\AbstractAccount
 {
     /** @var AccountManagementInterface */
@@ -28,38 +28,38 @@ class Login extends \Magento\Customer\Controller\AbstractAccount
     protected $formKeyValidator;
 
     /**
-     * @var AccountRedirect
-     */
+    * @var AccountRedirect
+    */
     protected $accountRedirect;
 
     /**
-     * @var Session
-     */
+    * @var Session
+    */
     protected $session;
 
     /**
-     * @var ScopeConfigInterface
-     */
+    * @var ScopeConfigInterface
+    */
     private $scopeConfig;
 
     /**
-     * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
-     */
+    * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
+    */
     private $cookieMetadataFactory;
 
     /**
-     * @var \Magento\Framework\Stdlib\Cookie\PhpCookieManager
-     */
+    * @var \Magento\Framework\Stdlib\Cookie\PhpCookieManager
+    */
     private $cookieMetadataManager;
 
     /**
-     * @param Context $context
-     * @param Session $customerSession
-     * @param AccountManagementInterface $customerAccountManagement
-     * @param CustomerUrl $customerHelperData
-     * @param Validator $formKeyValidator
-     * @param AccountRedirect $accountRedirect
-     */
+    * @param Context $context
+    * @param Session $customerSession
+    * @param AccountManagementInterface $customerAccountManagement
+    * @param CustomerUrl $customerHelperData
+    * @param Validator $formKeyValidator
+    * @param AccountRedirect $accountRedirect
+    */
     public function __construct(
         Context $context,
         Session $customerSession,
@@ -77,11 +77,11 @@ class Login extends \Magento\Customer\Controller\AbstractAccount
     }
 
     /**
-     * Get scope config
-     *
-     * @return ScopeConfigInterface
-     * @deprecated
-     */
+    * Get scope config
+    *
+    * @return ScopeConfigInterface
+    * @deprecated
+    */
     private function getScopeConfig()
     {
         if (!($this->scopeConfig instanceof \Magento\Framework\App\Config\ScopeConfigInterface)) {
@@ -94,11 +94,11 @@ class Login extends \Magento\Customer\Controller\AbstractAccount
     }
 
     /**
-     * Retrieve cookie manager
-     *
-     * @deprecated
-     * @return \Magento\Framework\Stdlib\Cookie\PhpCookieManager
-     */
+    * Retrieve cookie manager
+    *
+    * @deprecated
+    * @return \Magento\Framework\Stdlib\Cookie\PhpCookieManager
+    */
     private function getCookieManager()
     {
         if (!$this->cookieMetadataManager) {
@@ -110,11 +110,11 @@ class Login extends \Magento\Customer\Controller\AbstractAccount
     }
 
     /**
-     * Retrieve cookie metadata factory
-     *
-     * @deprecated
-     * @return \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
-     */
+    * Retrieve cookie metadata factory
+    *
+    * @deprecated
+    * @return \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
+    */
     private function getCookieMetadataFactory()
     {
         if (!$this->cookieMetadataFactory) {
@@ -126,11 +126,11 @@ class Login extends \Magento\Customer\Controller\AbstractAccount
     }
 
     /**
-     * Login post action
-     *
-     * @return \Magento\Framework\Controller\Result\Redirect
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
+    * Login post action
+    *
+    * @return \Magento\Framework\Controller\Result\Redirect
+    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+    */
     public function execute()
     {
         if ($this->session->isLoggedIn() || !$this->formKeyValidator->validate($this->getRequest())) {
@@ -145,60 +145,60 @@ class Login extends \Magento\Customer\Controller\AbstractAccount
             $login = $this->getRequest()->getPost('login');
             $rememberme = $this->getRequest()->getPost('rememberme');
             if (!empty($login['username']) && !empty($login['password'])) {
-             if(!empty($rememberme)){
-                $logindetails = array('username'=>$login['username'],'password'=>$login['password'],'remchkbox'=>1);
-                $logindetails = json_encode($logindetails);
-                $objectManager->get('Dckap\Ajaxlogin\Remembermecookie')->set($logindetails,604800);
-            }else{
-                $objectManager->get('Dckap\Ajaxlogin\Remembermecookie')->delete('rememberme');
-            }
-            try {
-                $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
-                $this->session->setCustomerDataAsLoggedIn($customer);
-                $this->session->regenerateId();
-                if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-                    $metadata->setPath('/');
-                    $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+                if(!empty($rememberme)){
+                    $logindetails = array('username'=>$login['username'],'password'=>$login['password'],'remchkbox'=>1);
+                    $logindetails = json_encode($logindetails);
+                    $objectManager->get('Dckap\Rememberme\Remembermecookie')->set($logindetails,604800);
+                }else{
+                    $objectManager->get('Dckap\Rememberme\Remembermecookie')->delete('rememberme');
                 }
-                $redirectUrl = $this->accountRedirect->getRedirectCookie();
-                if (!$this->getScopeConfig()->getValue('customer/startup/redirect_dashboard') && $redirectUrl) {
-                    $this->accountRedirect->clearRedirectCookie();
-                    $resultRedirect = $this->resultRedirectFactory->create();
-                        // URL is checked to be internal in $this->_redirect->success()
-                    $resultRedirect->setUrl($this->_redirect->success($redirectUrl));
-                    return $resultRedirect;
+                try {
+                    $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
+                    $this->session->setCustomerDataAsLoggedIn($customer);
+                    $this->session->regenerateId();
+                    if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
+                        $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+                        $metadata->setPath('/');
+                        $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+                    }
+                    $redirectUrl = $this->accountRedirect->getRedirectCookie();
+                    if (!$this->getScopeConfig()->getValue('customer/startup/redirect_dashboard') && $redirectUrl) {
+                        $this->accountRedirect->clearRedirectCookie();
+                        $resultRedirect = $this->resultRedirectFactory->create();
+    // URL is checked to be internal in $this->_redirect->success()
+                        $resultRedirect->setUrl($this->_redirect->success($redirectUrl));
+                        return $resultRedirect;
+                    }
+                } catch (EmailNotConfirmedException $e) {
+                    $value = $this->customerUrl->getEmailConfirmationUrl($login['username']);
+                    $message = __(
+                        'This account is not confirmed. <a href="%1">Click here</a> to resend confirmation email.',
+                        $value
+                        );
+                    $this->messageManager->addError($message);
+                    $this->session->setUsername($login['username']);
+                } catch (UserLockedException $e) {
+                    $message = __(
+                        'The account is locked. Please wait and try again or contact %1.',
+                        $this->getScopeConfig()->getValue('contact/email/recipient_email')
+                        );
+                    $this->messageManager->addError($message);
+                    $this->session->setUsername($login['username']);
+                } catch (AuthenticationException $e) {
+                    $message = __('Invalid login or password.');
+                    $this->messageManager->addError($message);
+                    $this->session->setUsername($login['username']);
+                } catch (\Exception $e) {
+    // PA DSS violation: throwing or logging an exception here can disclose customer password
+                    $this->messageManager->addError(
+                        __('An unspecified error occurred. Please contact us for assistance.')
+                        );
                 }
-            } catch (EmailNotConfirmedException $e) {
-                $value = $this->customerUrl->getEmailConfirmationUrl($login['username']);
-                $message = __(
-                    'This account is not confirmed. <a href="%1">Click here</a> to resend confirmation email.',
-                    $value
-                    );
-                $this->messageManager->addError($message);
-                $this->session->setUsername($login['username']);
-            } catch (UserLockedException $e) {
-                $message = __(
-                    'The account is locked. Please wait and try again or contact %1.',
-                    $this->getScopeConfig()->getValue('contact/email/recipient_email')
-                    );
-                $this->messageManager->addError($message);
-                $this->session->setUsername($login['username']);
-            } catch (AuthenticationException $e) {
-                $message = __('Invalid login or password.');
-                $this->messageManager->addError($message);
-                $this->session->setUsername($login['username']);
-            } catch (\Exception $e) {
-                    // PA DSS violation: throwing or logging an exception here can disclose customer password
-                $this->messageManager->addError(
-                    __('An unspecified error occurred. Please contact us for assistance.')
-                    );
+            } else {
+                $this->messageManager->addError(__('A login and a password are required.'));
             }
-        } else {
-            $this->messageManager->addError(__('A login and a password are required.'));
         }
-    }
 
-    return $this->accountRedirect->getRedirect();
-}
+        return $this->accountRedirect->getRedirect();
+    }
 }

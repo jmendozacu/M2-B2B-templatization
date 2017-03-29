@@ -37,10 +37,21 @@ class InstallSchema implements InstallSchemaInterface
             'id'
         )->addColumn(
             'customer_id',
-            \Magento\Framework\DB\Ddl\Table::TYPE_BIGINT,
+            \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
             null,
             ['unsigned' => true, 'nullable' => false],
             'Customer Id'    
+        )->addForeignKey(
+            $installer->getFkName(
+                'customer_creditline',
+                'customer_id',
+                'customer_entity',
+                'entity_id'
+                ),
+            'customer_id',
+            $installer->getTable('customer_entity'), 
+            'entity_id',
+            \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
        )->addColumn(
             'credit_amount',
             \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
