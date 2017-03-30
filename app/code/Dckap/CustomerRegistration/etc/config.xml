@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <customer>
+            <create_account>
+                <email_confirmed_template_csr>customer_create_account_email_confirmed_template_csr</email_confirmed_template_csr>
+            </create_account>
+        </customer>
+    </default>
+</config>
