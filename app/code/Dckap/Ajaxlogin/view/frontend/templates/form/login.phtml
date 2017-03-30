@@ -1,0 +1,68 @@
+<?php
+/**
+* Copyright © 2016 Magento. All rights reserved.
+* See COPYING.txt for license details.
+*/
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Customer\Block\Form\Login $block */
+?>
+<?php
+/**
+* Customer login form template
+*
+* @see \Magento\Customer\Block\Form\Login
+* @var $block \Magento\Customer\Block\Form\Login
+*/
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$loginvalue = $objectManager->get('Dckap\Rememberme\Remembermecookie')->get('rememberme');
+$username = '';
+$password = '';
+$chkbox = '';
+if($loginvalue){
+    $val = json_decode($loginvalue);
+    $username = $val->username;
+    $password = $val->password;
+    $chkbox = $val->remchkbox;
+}
+?>
+<div class="block block-customer-login">
+    <div class="product-title-wrapper">
+        <div class="pro-hedding">
+            <strong role="heading" aria-level="2"><h3 style="color: #000"><?php /* @escapeNotVerified */ echo __('Registered Customers') ?></h3></strong>
+            <span class="product-title-line"></span>
+        </div>
+    </div>
+    <div class="block-content" aria-labelledby="block-customer-login-heading">
+        <form class="form form-login" action="<?php echo $this->getUrl('ajaxlogin/account/login'); ?>" method="post" id="login-form" data-mage-init='{"validation":{}}'>
+            <?php echo $block->getBlockHtml('formkey'); ?>
+            <fieldset class="fieldset login" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+                <div class="field note"><?php /* @escapeNotVerified */ echo __('If you have an account, sign in with your email address.') ?></div>
+                <div class="field email required">
+                    <label class="label" for="email"><span><?php /* @escapeNotVerified */ echo __('Email') ?></span></label>
+                    <div class="control">
+                        <input name="login[username]" value="<?php if($username){ echo $username; } ?>" <?php if ($block->isAutocompleteDisabled()) :?> autocomplete="off"<?php endif; ?> id="email" type="email" class="input-text" title="<?php /* @escapeNotVerified */ echo __('Email') ?>" data-validate="{required:true, 'validate-email':true}">
+                    </div>
+                </div>
+                <div class="field password required">
+                    <label for="pass" class="label"><span><?php /* @escapeNotVerified */ echo __('Password') ?></span></label>
+                    <div class="control">
+                        <input name="login[password]" type="password" <?php if ($block->isAutocompleteDisabled()) :?> autocomplete="off"<?php endif; ?> class="input-text" id="pass" value="<?php if($password){ echo $password; } ?>" title="<?php /* @escapeNotVerified */ echo __('Password') ?>" data-validate="{required:true, 'validate-password':true}">
+                    </div>
+                </div>
+                <div class="field rememberme">
+                    <div class="control">
+                        <input type="checkbox" name="rememberme" id="rememberme" value="true" <?php if($chkbox){ ?>checked="checked"<?php } ?> style="width: auto;">Remember me
+                    </div>
+                </div>
+                <?php //echo $block->getChildHtml('form_additional_info'); ?>
+            </fieldset>
+
+            <div class="actions-toolbar">
+                <div class="primary" id="acc-reg-cus"><button type="submit" class="action login primary" name="send" id="send2"><span><?php /* @escapeNotVerified */ echo __('Login') ?></span></button></div>
+                <div class="secondary"><a class="action remind" href="<?php /* @escapeNotVerified */ echo $block->getForgotPasswordUrl() ?>"><span><?php /* @escapeNotVerified */ echo __('Forgot Your Password?') ?></span></a></div>
+            </div>
+        </form>
+    </div>
+</div>

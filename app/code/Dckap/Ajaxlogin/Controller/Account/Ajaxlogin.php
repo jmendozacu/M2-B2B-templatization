@@ -16,53 +16,53 @@ use Magento\Framework\Exception\State\UserLockedException;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 class Ajaxlogin extends \Magento\Framework\App\Action\Action
 {
-     /**
-     * @var PageFactory
-     */
-     protected $resultPageFactory;
-     /** @var AccountManagementInterface */
-     protected $customerAccountManagement;
+    /**
+    * @var PageFactory
+    */
+    protected $resultPageFactory;
+    /** @var AccountManagementInterface */
+    protected $customerAccountManagement;
 
-     /** @var Validator */
-     protected $formKeyValidator;
+    /** @var Validator */
+    protected $formKeyValidator;
 
     /**
-     * @var AccountRedirect
-     */
+    * @var AccountRedirect
+    */
     protected $accountRedirect;
 
     /**
-     * @var Session
-     */
+    * @var Session
+    */
     protected $session;
 
     /**
-     * @var ScopeConfigInterface
-     */
+    * @var ScopeConfigInterface
+    */
     private $scopeConfig;
 
     /**
-     * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
-     */
+    * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
+    */
     private $cookieMetadataFactory;
 
     /**
-     * @var \Magento\Framework\Stdlib\Cookie\PhpCookieManager
-     */
+    * @var \Magento\Framework\Stdlib\Cookie\PhpCookieManager
+    */
     private $cookieMetadataManager;
 
     /**
-     * @param Context $context
-     * @param Session $customerSession
-     * @param AccountManagementInterface $customerAccountManagement
-     * @param CustomerUrl $customerHelperData
-     * @param Validator $formKeyValidator
-     * @param AccountRedirect $accountRedirect
-     */
+    * @param Context $context
+    * @param Session $customerSession
+    * @param AccountManagementInterface $customerAccountManagement
+    * @param CustomerUrl $customerHelperData
+    * @param Validator $formKeyValidator
+    * @param AccountRedirect $accountRedirect
+    */
     /**
-    
-     * @param PageFactory $resultPageFactory
-     */
+
+    * @param PageFactory $resultPageFactory
+    */
     public function __construct(
         Context $context,
         Session $customerSession,
@@ -71,7 +71,7 @@ class Ajaxlogin extends \Magento\Framework\App\Action\Action
         Validator $formKeyValidator,
         AccountRedirect $accountRedirect,
         PageFactory $resultPageFactory
-        
+
         ) {
         $this->session = $customerSession;
         $this->customerAccountManagement = $customerAccountManagement;
@@ -83,33 +83,33 @@ class Ajaxlogin extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * Customer order history
-     *
-     * @return \Magento\Framework\View\Result\Page
-     */
-        /**
-     * Get scope config
-     *
-     * @return ScopeConfigInterface
-     * @deprecated
-     */
-        private function getScopeConfig()
-        {
-            if (!($this->scopeConfig instanceof \Magento\Framework\App\Config\ScopeConfigInterface)) {
-                return \Magento\Framework\App\ObjectManager::getInstance()->get(
-                    \Magento\Framework\App\Config\ScopeConfigInterface::class
-                    );
-            } else {
-                return $this->scopeConfig;
-            }
+    * Customer order history
+    *
+    * @return \Magento\Framework\View\Result\Page
+    */
+    /**
+    * Get scope config
+    *
+    * @return ScopeConfigInterface
+    * @deprecated
+    */
+    private function getScopeConfig()
+    {
+        if (!($this->scopeConfig instanceof \Magento\Framework\App\Config\ScopeConfigInterface)) {
+            return \Magento\Framework\App\ObjectManager::getInstance()->get(
+                \Magento\Framework\App\Config\ScopeConfigInterface::class
+                );
+        } else {
+            return $this->scopeConfig;
         }
+    }
 
     /**
-     * Retrieve cookie manager
-     *
-     * @deprecated
-     * @return \Magento\Framework\Stdlib\Cookie\PhpCookieManager
-     */
+    * Retrieve cookie manager
+    *
+    * @deprecated
+    * @return \Magento\Framework\Stdlib\Cookie\PhpCookieManager
+    */
     private function getCookieManager()
     {
         if (!$this->cookieMetadataManager) {
@@ -121,11 +121,11 @@ class Ajaxlogin extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * Retrieve cookie metadata factory
-     *
-     * @deprecated
-     * @return \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
-     */
+    * Retrieve cookie metadata factory
+    *
+    * @deprecated
+    * @return \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
+    */
     private function getCookieMetadataFactory()
     {
         if (!$this->cookieMetadataFactory) {
@@ -137,44 +137,46 @@ class Ajaxlogin extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * Login post action
-     *
-     * @return \Magento\Framework\Controller\Result\Redirect
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
+    * Login post action
+    *
+    * @return \Magento\Framework\Controller\Result\Redirect
+    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+    */
     public function execute()
     {
         if ($this->session->isLoggedIn()) {
-         $message['url'] = 'success'; 
-         $message['error'] = '';
-     }
+            $message['url'] = 'success'; 
+            $message['error'] = '';
+        }
 
-     if ($this->getRequest()->isPost()) {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $login = $this->getRequest()->getPost();
-        if (!empty($login['email']) && !empty($login['pass'])) {
-            if(!empty($login['rememberme']) && $login['rememberme'] === 'true'){
-                $logindetails = array('username'=>$login['email'],'password'=>$login['pass'],'remchkbox'=>1);
-                $logindetails = json_encode($logindetails);
-                $objectManager->get('Dckap\Ajaxlogin\Remembermecookie')->set($logindetails,604800);
-            }else{
-                $objectManager->get('Dckap\Ajaxlogin\Remembermecookie')->delete('remeber');
-            }
-            try {
-                $customer = $this->customerAccountManagement->authenticate($login['email'], $login['pass']);
-                $this->session->setCustomerDataAsLoggedIn($customer);
-                $this->session->regenerateId();
-                $message['url'] ='success';
-                $message['error'] ='';
-                if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-                    $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-                    $metadata->setPath('/');
-                    $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+        if ($this->getRequest()->isPost()) {
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $login = $this->getRequest()->getPost();
+            $rememberme = $this->getRequest()->getPost('rememberme');
+            if (!empty($login['email']) && !empty($login['pass'])) {
+                if($rememberme == 1 || $rememberme === 'true'){
+                    $logindetails = array('username'=>$login['email'],'password'=>$login['pass'],'remchkbox'=>1);
+                    $logindetails = json_encode($logindetails);
+                    $objectManager->get('Dckap\Rememberme\Remembermecookie')->set($logindetails,604800);
+                }else{
+                    $objectManager->get('Dckap\Rememberme\Remembermecookie')->delete('rememberme');
                 }
-                
-					$redirectUrl= $_SERVER['HTTP_REFERER'];//$this->accountRedirect->getRedirectCookie();
-					//exit;
-                 
+                try {
+                    $customer = $this->customerAccountManagement->authenticate($login['email'], $login['pass']);
+                    $this->session->setCustomerDataAsLoggedIn($customer);
+                    $this->session->regenerateId();
+                    $message['url'] ='success';
+                    $message['error'] ='';
+                    if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
+                        $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+                        $metadata->setPath('/');
+                        $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+                    }
+
+                    $redirectUrl= $_SERVER['HTTP_REFERER'];
+                    //$this->accountRedirect->getRedirectCookie();
+                    //exit;
+
                     if (!$this->getScopeConfig()->getValue('customer/startup/redirect_dashboard') && $redirectUrl) {
                         $this->accountRedirect->clearRedirectCookie();
                         $resultRedirect = $this->resultRedirectFactory->create();
@@ -198,17 +200,17 @@ class Ajaxlogin extends \Magento\Framework\App\Action\Action
                     $message['url'] = '';
                     $this->session->setUsername($login['email']);
                 } catch (\Exception $e) {
-                    // PA DSS violation: throwing or logging an exception here can disclose customer password
+                // PA DSS violation: throwing or logging an exception here can disclose customer password
                     $message['error'] = 'An unspecified error occurred. Please contact us for assistance.';
                     $message['url'] = '';
                 }
             } else {
-              $message['error'] = 'A login and a password are required.';
-              $message['url'] = '';
-          }
-      }
-      
-      echo json_encode($message);
-      exit;
-  }
+                $message['error'] = 'A login and a password are required.';
+                $message['url'] = '';
+            }
+        }
+
+        echo json_encode($message);
+        exit;
+    }
 }       
