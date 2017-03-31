@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Widget/etc/widget.xsd">
+	<widget id="Dckap_Cataloggroup" class="Dckap\Cataloggroup\Block\Widget\Cataloggroup">
+		<label translate="true">Shop By Product Group</label>
+		<description>Displayed in home page</description>
+		<parameters>
+			<parameter name="categoryids" xsi:type="text"  visible="true" sort_order="1" >
+				<label translate="true">Category Ids</label>
+			</parameter>           
+		</parameters>
+	</widget>
+</widgets>

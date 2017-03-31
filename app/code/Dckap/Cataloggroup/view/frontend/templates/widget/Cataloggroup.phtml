@@ -1,0 +1,85 @@
+<?php
+$title = $block->getTitle() ? __($block->getTitle()) : 'Shop By Product Group'; 
+$mode = 'grid';
+$i = 0;
+?>
+<div class="home-product-group">
+    <div class="block-title">
+        <strong role="heading" aria-level="2"><h3><?php /* @escapeNotVerified */ echo $title; ?></h3></strong>
+    </div>
+    <?php 
+    $cat_ids = $block->getCategoryIds();
+    $category_ids = explode(',',$cat_ids);
+    $categoryHelper = $this->getCategoryHelper();
+    ?>
+    <ul class="product-group">
+        <?php
+        foreach($category_ids as $key =>$category_id):
+            $category = $block->getCategory($category_id);
+            $child_count= 0;
+            if (!$category->getIsActive()) {
+                continue;
+            }
+            if ($i == 10) {
+                continue;
+            }
+            ?>
+            <li>
+                <?php 
+                $image_url = $this->getCategoryImageUrl($category->getEntityId());
+                ?>
+                <span><a href="<?php echo $categoryHelper->getCategoryUrl($category) ?>"><img src="<?php echo $image_url; ?>" style="width:165px; height:165px"></a></span>
+                <ul class="productsub-categories" >
+                    <li><a href="<?php echo $categoryHelper->getCategoryUrl($category) ?>"><?php echo $category->getName() ?></a></li>
+                    <?php  
+                    if($childrenCategories =  $category->getChildrenCategories()):
+                       
+                    foreach($childrenCategories as $childrenCategory):
+                        if( $category->getUseFlatResource())
+                        {
+                            $children_count = count($childrenCategory->get('children_data'));
+                        }else
+                        {
+                            $children_count = $childrenCategories->count();
+                        }
+                        if (!$childrenCategory->getIsActive()) {
+                            continue;
+                        }
+                        if( $child_count == 3)
+                        {
+                            continue;
+                        }
+                        ?>
+                        <li><a href="<?php echo $categoryHelper->getCategoryUrl($childrenCategory) ?>"><?php echo $childrenCategory->getName() ?></a></li>
+                        <?php
+                        if($children_count >= 3)
+                        {
+                            if($child_count ==  2)
+                            {
+                                ?>
+                                <li><a href="<?php echo $categoryHelper->getCategoryUrl($category) ?>">See All></a></li>
+                                <?php
+                            }
+                        }else if(($children_count < 3))
+                        {
+                            if($child_count ==  $children_count-1)
+                            {
+                                ?>
+                                <li><a href="<?php echo $categoryHelper->getCategoryUrl($category) ?>">See All></a></li>
+                                <?php
+                            }
+                        }
+                        $child_count++;
+                    endforeach;
+                    ?>
+                </ul>
+                <?php
+                endif;
+                ?>
+            </li>
+            <?php 
+            $i++;
+        endforeach;
+        ?>
+    </ul>
+</div>
