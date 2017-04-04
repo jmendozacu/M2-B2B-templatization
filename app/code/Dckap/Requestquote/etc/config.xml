@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <requestquote>
+            <option>
+                <enabled>1</enabled>
+                <date>5</date>
+            </option>
+            <email>
+                <recipient>
+                    <![CDATA[hello@example.com]]>
+                </recipient>
+                <sender>custom2</sender>
+                <template>requestquote_email_template</template>
+            </email>
+            <email_reply>
+                <subject>Request Quote</subject>
+                <body>Quote Received ...</body>
+            </email_reply>
+            <upload>
+                <allow>jpg,jpeg,png,gif</allow>
+            </upload>
+        </requestquote>
+    </default>
+</config>

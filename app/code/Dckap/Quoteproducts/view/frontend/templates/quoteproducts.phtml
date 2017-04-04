@@ -1,0 +1,178 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$customerSession = $objectManager->get('Magento\Customer\Model\Session');
+$siteBaseUrl = $this->getBaseUrl();
+?>
+<?php if(count($block->getCollection())){ ?>
+  <div class="quoted-download" id="quotedcsv">Download <span style="cursor: pointer;color: #e31837;">PDF</span></div>
+  <form class="form form-login" name="quote_search_frm" id="quote_search_frm" method="post" action="">
+    <div class="quote_search_box"><input type="text" name="search_quote" id="search_quote" placeholder="Search Product name, Sku.." value="">
+      <div class="item_loader" style="display:none;width:25px;height:25px;"><img width="25" height="25" src="<?php echo $block->getViewFileUrl('Dckap_Requestquote::images/loading.gif'); ?>"></div>
+      <button type="submit" title="Search" class="action submit primary"><span>Search</span></button>
+    </div><a class="quote_search_clr" href="<?php echo $siteBaseUrl."quoteproducts/"; ?>">Clear</a>
+  </form>
+  <form class="form form-login" name="quote_add_cart" id="quote_add_cart" method="post" action="<?php echo $block->getUrl('quoteproducts/index/addproduct');?>">       
+    <table class="product_dckaptable" id="q_tab" style="width:100% !important;">
+      <tbody>
+        <input type="hidden" name="sbu" id="sbu" value="<?php echo $siteBaseUrl; ?>">
+        <tr class="prouct-tabel">
+          <th>Quote</th>
+          <th>SKU</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>QTY</th>
+          <th>Date</th>
+          <th>Order</th>
+        </tr>
+        <div id="srch_prt"></div>
+        <?php
+        $quote_col = $block->getCollection();
+        foreach($quote_col as $item):
+          ?>
+          <tr>
+            <td><input type="hidden" Name="qid[]" id="qid[]" value="<?php echo $item->getRequestId(); ?>"><input type="hidden" name="pid_<?php echo $item->getRequestId(); ?>" id="pid_<?php echo $item->getRequestId(); ?>" value="<?php echo $item->getProductId(); ?>" readonly /><?php echo $item->getRequestId(); ?></td>
+
+            <td><?php $_product = $block->getProductById($item->getProductId()); ?><a href="<?php echo $_product->getProductUrl(); ?>"><?php echo $_product->getSku(); ?></a></td>
+
+            <td><?php echo $item->getProductName(); ?></td>
+
+            <td><?php if($item->getStatus() == 'New' || $item->getStatus() == 'Processing'){?>Pending<?php } else {  $_product = $block->getProductById($item->getProductId()); echo $block->getCurrencySymbol().number_format($_product->getPrice(), 2, '.', ''); } ?></td>
+
+            <td><?php if($item->getStatus() == 'Approved'){?><input type="text" class="qoute_quantity" name="pqty_<?php echo $item->getRequestId(); ?>" id="pqty_<?php echo $item->getRequestId(); ?>" value="<?php echo $item->getProductQty(); ?>"><?php }else{ echo $item->getProductQty(); } ?></td>
+
+            <td><?php echo date('m/d/y', strtotime($item->getCreateDate())); ?></td>
+
+            <td><?php if($item->getStatus() == 'Approved'){ ?><input type="checkbox" name="quote_order[]" id="order[]" value="<?php echo $item->getRequestId(); ?>"><?php }else { echo $item->getStatus(); } ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+    <div class="quote_submit_box"><button type="submit" title="Submit" id="add-to-cart" class="action submit primary"><span>Submit</span></button></div>
+  </form>
+
+  <?php if ($block->getPagerHtml()): ?>
+    <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+  <?php endif ?>
+
+<?php } else { ?>
+
+  <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('No Records found.'); ?></span></div>
+
+<?php } ?>
+<script>
+  require(['jquery','Magento_Ui/js/modal/modal'],
+    function($,modal) 
+    {
+      function getDataUri(url, cb)
+      {
+        var image = new Image();
+        image.setAttribute('crossOrigin', 'anonymous');  //getting images from external domain
+
+        image.onload = function () {
+          var canvas = document.createElement('canvas');
+          canvas.width = this.naturalWidth;
+          canvas.height = this.naturalHeight; 
+          //next three lines for white background in case png has a transparent background
+          var ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#fff';  // set white fill style
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          canvas.getContext('2d').drawImage(this, 0, 0);
+
+          cb(canvas.toDataURL('image/jpeg'));
+        };
+        image.src = url;
+      }
+      // Usage
+      var headerImgData
+
+      $("#quotedcsv").click(function(){
+        var Base_url = '<?php echo $siteBaseUrl; ?>';
+        var values = [];
+        getDataUri(Base_url +'pub/media/logo/default/dckap.png', function(dataUri) {
+          headerImgData =dataUri;
+        });
+        $('input[name="qid[]"]').each(function() {
+          values.push($(this).val());
+        });
+
+        $.ajax({
+          url:Base_url +"quoteproducts/index/pdfdownload",
+          type: 'post',
+          dataType: "json",
+          contentType: 'application/x-www-form-urlencoded',
+          data: {'qids' :values},
+          success: function(response ){
+
+            var inside_data = [];
+            var j = 0;
+            for(var i=0;i<response.length;i++)
+            {
+              inside_data[j] = response[i];
+              j++;
+            }
+
+            var columns = ['Quote','SKU','Product Name','Price','QTY','Date'];
+
+            var doc = new jsPDF('l', 'pt','a3');
+            var header = function (data) {
+              doc.setFontSize(20);
+              doc.setTextColor(40);
+              doc.setFontStyle('normal');
+              doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 40, 400, 47);
+
+            };
+
+            var options = {
+              beforePageContent: header,
+              margin: {top: 140},
+              startY: 100
+            };
+            doc.setFontSize(15);
+            doc.setFontSize(12);
+            doc.setTextColor(100);
+
+            var cols = columns;
+            doc.autoTable(cols, inside_data,options );
+
+            doc.save('Quoted_Items.pdf'); 
+
+          },
+          error: function( errorThrown ){
+            console.log( errorThrown );
+          }
+        });
+      });
+
+      $("#add-to-cart").click(function(){
+        if($('input[name="quote_order[]"]:checked').length==0){
+          alert("Please choose any one of the products from table.");
+          return false;
+        }
+        else{
+          $( "#quote_add_cart" ).submit();
+        }
+      });
+      function processForm( e ){
+        $('.item_loader').show();
+        $.ajax({
+          url:$('#sbu').val()+"quoteproducts/index/getproductinfo",
+          dataType: 'text',
+          type: 'post',
+          contentType: 'application/x-www-form-urlencoded',
+          data: {'qry' : $('#search_quote').val()},
+          success: function( data, textStatus, jQxhr ){
+            $("#q_tab tr:not(:first)").remove();
+            $('#q_tab tr:last').after(data);
+            $('.item_loader').hide();
+          },
+          error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+          }
+        });
+        e.preventDefault();
+      }
+      $('#quote_search_frm').submit( processForm );
+    });
+</script>

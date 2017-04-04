@@ -27,7 +27,7 @@ $customerSession = $objectManager->get('Magento\Customer\Model\Session');
     <li><a href="<?php echo $block->getUrl('contact-us');?>" ><i class="contact-ico dckap-sprite"></i><h3>Contact Us</h3></a></li>   
     <li><a href="<?php echo $block->getUrl('about-us');?>" ><i class="about-ico dckap-sprite"></i><h3>About Us</h3></a></li> 
     <li><a href="<?php echo $block->getUrl('resource-hub');?>" ><i class="resource-ico dckap-sprite"></i><h3>Resource Hub</h3></a></li>
-    <li><a href="<?php echo $this->getBaseUrl().'quickrfq/index/index/' ?>"><i class="req_ico dckap-sprite"></i><h3>Request Quote</h3></a></li> 
+    <li><a href="<?php echo $this->getBaseUrl().'requestquote/index/index/' ?>"><i class="req_ico dckap-sprite"></i><h3>Request Quote</h3></a></li> 
     <li><a href="javascript:void(0);" class="popup-head" data-flag="quickorder-form" onclick="toggle_visibility('quickorder-form')" id="q-order"><i class="ouick-ico dckap-sprite"></i><h3>Quick Order</h3></a>
       <?php 
       $default_no_of_rows = trim($block->_scopeConfig->getValue('quickorder_section/quickorder_group_general/default_rows', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));

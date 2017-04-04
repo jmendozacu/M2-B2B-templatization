@@ -1,0 +1,29 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/* @var $block \Magento\Backend\Block\Widget\Form\Renderer\Fieldset\Element */
+$element = $block->getElement();
+$value = $element->getValue();
+$label = __('Uploaded ').$element->getLabel();
+
+?>
+
+    <?php if($value): ?>
+    
+        <div class="admin__field field field-prd ">
+                
+                <?php echo $element->getLabelHtml() ?>
+                <div class="admin__field-control control">
+                    <?php echo '<a href="'.$block->getMediaUrl().$value.'" target="_blank">'.$label.'</a>'; //$element->getElementHtml(); ?>
+                </div>           
+        </div>
+        
+    <?php endif; ?>
+ 

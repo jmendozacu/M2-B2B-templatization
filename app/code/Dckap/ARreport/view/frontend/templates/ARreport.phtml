@@ -1,0 +1,193 @@
+<?php
+$ar_reports = $block->getReports(); 
+// $ar_total_collection =$block->getTotalValues($ar_reports);
+
+$customer_id = $block->getCustomerId();
+
+if(!empty($ar_reports))
+{
+  ?>
+
+  <div class="ar_report_docs">
+    <a href="javascript:void(0)"  id="pdf_newd" onclick=""><i class="pdf-icon dckap-sprite"></i> Download PDF</a>
+  </div>
+  <span class="ar-customer">
+    Customer Id: <?php echo $customer_id; ?>
+  </span>
+  <table class="product_dckaptable ar_reports_table" id="new_id">
+    <thead>
+      <tr>
+        <th>Invoice No</th>
+        <th>Invoice Date</th> 
+        <th>Original Invoice Amount</th>
+        <th>Net Due Date</th>
+        <th>Terms Due Date</th>
+        <th>Total Due</th>
+        <th>Below 30</th>
+        <th>31 to 60</th>
+        <th>61 to 90</th>
+        <th>Over 90</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <?php
+      $i = 1;
+      $memo_amount = 0;
+      $bucket1 =0;
+      $bucket2 = 0;
+      $bucket3 = 0;
+      $bucket4 = 0;
+      $total_due = 0;
+
+      // print_r($ar_reports);
+      foreach ($ar_reports as $key=>$value) {
+        // print_r($value);
+        // exit;
+        // $memo_amount = $memo_amount + $value->memo_amount;
+        $total_due = $total_due + $value['total_due'];
+        // $bucket1 = $bucket1 + $value->bucket1 ;
+        // $bucket2 = $bucket2 + $value->bucket2 ;
+        // $bucket3 = $bucket3 + $value->bucket3 ;
+        // $bucket4 = $bucket4 + $value->bucket4 ;
+
+        ?> 
+        <tr>
+          <td><a href="<?php echo $block->getInvoiceUrl($value['order_id']) ?>" class="action order"><?php echo $value['invoice_no']; ?></a></td>
+          <td><?php  $str=$value['invoice_date']; echo date('m/d/Y', strtotime($value['invoice_date']));  ?></td>
+          <td ><?php echo $block->getFormattedCurrency()->currency($value['original_amount']); ?></td>
+          <td ><?php //$str=$value->net_due_date; echo date('m/d/Y', strtotime($value->net_due_date)); ?>-</td>
+          <td><?php  ///$str=$value->terms_due_date; echo $str=date('m/d/Y', strtotime($value->terms_due_date)); ?>-</td>
+          <td><?php echo $block->getFormattedCurrency()->currency($value['total_due']); ?></td>
+          <td><?php //echo $value->bucket1; ?>-</td>
+          <td><?php //echo $value->bucket2; ?>-</td>
+          <td><?php //echo $value->bucket3; ?>-</td>
+          <td><?php //echo $value->bucket4; ?>-</td>
+        </tr>
+
+        <?php
+
+        if(count($ar_reports) == $i)
+        {
+          ?>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><?php echo $block->getFormattedCurrency()->currency($total_due); ?></td>
+            <td><?php //echo $bucket1; ?>-</td>
+            <td><?php //echo $bucket2; ?>-</td>
+            <td><?php //echo $bucket3; ?>-</td>
+            <td><?php //echo $bucket4; ?>-</td>
+          </tr>
+          <?php
+        } $i++;
+      }
+      ?>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+    require(['jquery'],
+      function($) {
+        $( document ).ready(function() {
+
+          function getDataUri(url, cb)
+          {
+            var image = new Image();
+            image.setAttribute('crossOrigin', 'anonymous'); 
+
+
+            image.onload = function () {
+              var canvas = document.createElement('canvas');
+              canvas.width = this.naturalWidth;
+              canvas.height = this.naturalHeight; 
+
+
+              var ctx = canvas.getContext('2d');
+              ctx.fillStyle = '#fff';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+              canvas.getContext('2d').drawImage(this, 0, 0);
+
+              cb(canvas.toDataURL('image/jpeg'));
+            };
+
+            image.src = url;
+          }
+
+          var headerImgData
+
+          $( "#pdf_newd").on( "click", function() {
+            var req_report = $(this).attr('id');
+            var roll_year = $(this).parent().prev('td').children().find(":selected").text();
+            var Base_url = '<?php echo $this->getBaseUrl(); ?>';
+            getDataUri(Base_url +'pub/media/logo/default/dckap.png', function(dataUri) {
+              headerImgData =dataUri;
+            });
+            $.ajax({
+              url:Base_url +"view/ar/pdfreport/",
+              type: 'post',
+              dataType: "json",
+              contentType: 'application/x-www-form-urlencoded',
+
+              success: function(response ){
+                var inside_data = [];
+                var j = 0;
+                for(var i=0;i<response.length;i++)
+                {
+                  if(i!=0)
+                  {
+                    inside_data[j] = response[i];
+                    j++;
+                  }
+                }       
+
+                var columns = response[0];
+
+
+
+                var doc = new jsPDF('l', 'pt','a3');
+                var header = function (data) {
+                  doc.setFontSize(20);
+                  doc.setTextColor(40);
+                  doc.setFontStyle('normal');
+                  doc.addImage(headerImgData, 'JPEG', data.settings.margin.left, 40, 400, 47);
+
+                };
+
+                var options = {
+                  beforePageContent: header,
+                  margin: {top: 140},
+                  startY: 160
+                };
+                doc.setFontSize(15);
+                doc.text("A/R Report", 40 , 130);
+                doc.setFontSize(12);
+                doc.setTextColor(100);
+
+                var cols = columns;
+                var test = doc.autoTable(cols, inside_data,options );
+
+                doc.save('A/R Report.pdf')
+
+              },
+              error: function( errorThrown ){
+                console.log( errorThrown );
+              }
+            });
+          });
+        });
+      });
+    </script>
+    <?php
+  }else {
+    ?>
+    <div class="message info empty">
+      <span>We do not have any records available. If you do not have a credit line, please fill out an application. If you have any questions please call us.</span>
+    </div>
+    <?php
+  }
+  ?>
