@@ -394,6 +394,22 @@ $customerId = $block->getCustomerLoggedin();
                         var options = {
                             beforePageContent: header,
                             margin: {top: 140},
+                            columnStyles:{
+                                1: {halign:'right'},
+                                2: {halign:'right'},
+                                3: {halign:'right'},
+                                4: {halign:'right'},
+                                5: {halign:'right'},
+                                6: {halign:'right'},
+                                7: {halign:'right'},
+                                8: {halign:'right'},
+                                9: {halign:'right'},
+                                10: {halign:'right'},
+                                11: {halign:'right'},
+                                12: {halign:'right'},
+                                13: {halign:'right'},
+                                14: {halign:'right'},
+                            },
                             startY: 170
                         };
                         doc.setFontSize(15);
@@ -460,6 +476,22 @@ $customerId = $block->getCustomerLoggedin();
                         var options = {
                             beforePageContent: header,
                             margin: {top: 140},
+                            columnStyles:{
+                                1: {halign:'right'},
+                                2: {halign:'right'},
+                                3: {halign:'right'},
+                                4: {halign:'right'},
+                                5: {halign:'right'},
+                                6: {halign:'right'},
+                                7: {halign:'right'},
+                                8: {halign:'right'},
+                                9: {halign:'right'},
+                                10: {halign:'right'},
+                                11: {halign:'right'},
+                                12: {halign:'right'},
+                                13: {halign:'right'},
+                                14: {halign:'right'},
+                            },
                             startY: 170
                         };
                         doc.setFontSize(15);
@@ -503,6 +535,12 @@ $customerId = $block->getCustomerLoggedin();
                     data: {'req_report' :req_report,'roll_year':roll_year},
                     success: function(response ){
 
+                        // var columns = [
+                        //     {title: "Item #", key: "id", align: "center"}, 
+                        //     {title: "Item Description", key: "description", align: "center"}, 
+                        //     {title: "Total Amount", key: "currency", align: "center"}, 
+                        //     {title: "Total Quantity Ordered", key: "qty", align: "center"}
+                        // ];
                         var columns = ['Item #',"Item Description", "Total Amount","Total Quantity Ordered"];
                         //	console.log(response); return;
                         var inside_data = response;
@@ -519,6 +557,7 @@ $customerId = $block->getCustomerLoggedin();
                         var options = {
                             beforePageContent: header,
                             margin: {top: 140},
+                            columnStyles:{ 2: {halign:'right',columnWidth: 100,padding: 100},3: {halign:'center'}},
                             startY: 170
                         };
                         doc.setFontSize(15);
